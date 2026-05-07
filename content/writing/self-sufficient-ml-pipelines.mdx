@@ -1,0 +1,21 @@
+---
+title: "On building self-sufficient ML pipelines"
+description: "Notes on resisting LLM-generated code as a learning crutch."
+date: "2026-03-12"
+---
+
+I've been thinking a lot about coding self-sufficiency lately. The temptation, especially when working on something like a CNN pipeline at 11pm on a Tuesday, is to ask Claude to generate the whole thing and move on. The code works. The deadline is met. But six months later, when I look at my own repo, I can't tell you why a particular preprocessing step exists.
+
+So I've been changing how I work.
+
+The rule I've been trying to keep is: if I can't explain why a line of code is there, it doesn't go in. That means writing more from scratch, asking the AI for explanations rather than implementations, and keeping a separate file of "things I asked about and now understand."
+
+It's slower. It's also the only way the work actually compounds.
+
+## What I've changed
+
+For my image authenticity classifier project, I now write the dataset preparation script myself, end to end, before reading any reference code. If I get stuck, I describe the problem in plain English first, then write what I think the solution should look like, *then* check it against an LLM. The error correction is where most of the learning happens.
+
+For the modeling code, I'll often ask Claude to walk me through *why* a particular architecture choice makes sense, what trade-offs it implies, and what it would look like to choose differently. Then I implement.
+
+This approach isn't anti-AI. It's anti-passivity. The tool is incredible. The trap is letting it do thinking that should be mine.

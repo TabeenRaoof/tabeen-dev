@@ -1,0 +1,19 @@
+---
+title: "BusyBees"
+description: "Family activity recommendation app with personalized suggestions and event scraping."
+date: "2025-08-01"
+tags: ["Full-stack", "Recommender systems"]
+stack: ["Next.js", "FastAPI", "Supabase", "Python"]
+github: "https://github.com/tabeen/busybees"
+status: "Complete"
+---
+
+## Overview
+
+A family-oriented activity recommendation app I built as my first major portfolio project after starting at SFBU. Designed around a real problem I had as a parent: it's hard to find age-appropriate weekend activities efficiently.
+
+## Architecture
+
+Next.js frontend with a FastAPI backend handling the recommendation logic and a scraper that pulls activity listings from public event sources. Supabase handles auth and persistence.
+
+The recommendation engine uses a simple content-based approach: activities are tagged with attributes (age range, indoor/outdoor, cost, duration), users specify their preferences, and we surface the highest-scoring matches.

@@ -1,0 +1,21 @@
+---
+title: "Fake Job Posting Detector"
+description: "Binary classifier on real-world job posting data to flag fraudulent listings."
+date: "2025-12-01"
+tags: ["NLP", "Classification"]
+stack: ["Python", "scikit-learn", "pandas", "Streamlit"]
+github: "https://github.com/tabeen/fake-job-detector"
+status: "Complete"
+---
+
+## Overview
+
+Built as a portfolio piece to practice the full ML lifecycle: data exploration, feature engineering, model selection, evaluation, and deployment as an interactive demo.
+
+The dataset is the EMSCAD corpus of 18,000 real job postings, ~5% of which are confirmed fraudulent. Class imbalance is the central challenge.
+
+## Approach
+
+Started with simple TF-IDF features on the job description text plus structured features (location, has_company_logo, employment_type). Compared logistic regression, random forest, and gradient boosting baselines.
+
+After hyperparameter tuning and dealing with the class imbalance via SMOTE, the gradient boosting model achieved an F1 of 0.78 on the held-out fraud class — meaningful for a domain where false negatives cost users.

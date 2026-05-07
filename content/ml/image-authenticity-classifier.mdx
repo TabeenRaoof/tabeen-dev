@@ -1,0 +1,32 @@
+---
+title: "Image Authenticity Classifier"
+description: "Three-class classifier distinguishing real photographs, digitally forged images, and AI-generated images."
+date: "2026-04-15"
+tags: ["Computer vision", "CNN"]
+stack: ["Python", "PyTorch", "XceptionNet", "scikit-learn", "Gradio"]
+github: "https://github.com/tabeen/image-authenticity-classifier"
+demo: "https://huggingface.co/spaces/tabeen/image-authenticity-demo"
+diagram: "/diagrams/architecture.png"
+research:
+  summary: "Comparison of XceptionNet vs MobileNetV2 feature extractors paired with Random Forest and SVM classifier heads, evaluated on ArtiFact and CASIA 2.0 datasets. Results show that the lighter feature extractor + classical classifier combination retains most of the accuracy at a fraction of the inference cost."
+featured: true
+status: "Active"
+---
+
+## Overview
+
+As image generation and editing tools improve, distinguishing authentic photographs from manipulated or synthetic images becomes harder. This project explores a lightweight classification approach that doesn't require expensive end-to-end training.
+
+The pipeline uses a pretrained CNN as a frozen feature extractor, then trains a classical classifier on those features. This keeps training fast (minutes, not hours), keeps the model small enough to run on commodity hardware, and lets us iterate on the classifier without retraining the whole network.
+
+## Approach
+
+**Feature extraction.** XceptionNet, pretrained on ImageNet, produces a 2048-dimensional embedding for each image. We freeze the backbone and use it purely as a feature extractor.
+
+**Classification.** A Random Forest is trained on these embeddings to predict one of three classes: real, digitally forged, or AI-generated.
+
+**Datasets.** Training uses ArtiFact for the AI-generated class and CASIA 2.0 for the digitally-forged class. Real images are sampled from both.
+
+## Why this matters
+
+Most public benchmarks frame this as binary (real vs. fake), but in practice the source of "fake" matters — a Photoshop manipulation and a Stable Diffusion output have very different forensic signatures. The three-class framing forces the classifier to learn both kinds of signal explicitly.
