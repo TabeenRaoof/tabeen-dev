@@ -1,22 +1,30 @@
 import Link from "next/link";
 import { NavLink } from "./NavLink";
+import { Logo } from "./Logo";
 
-// Header stays simple — logo on left, nav on right.
+// Header stays simple — logo mark + wordmark on left, nav on right.
 // Active link state is handled inside NavLink (it reads pathname client-side).
-// The orange dot in "tabeen.dev" is the only color emphasis here —
-// keeps the brand presence subtle but consistent.
+//
+// The patterned Logo mark is the site's primary visual identity —
+// abstracted from the caterpillar's body spots. The orange dot in
+// "tabeen.dev" wordmark gives a small color punctuation alongside it.
 
 export function Header() {
   return (
     <header className="border-b border-line">
       <div className="max-w-3xl mx-auto px-6 sm:px-8 py-5 flex items-center justify-between">
-        {/* Logo — serif font for warmth, orange dot as the only branded element */}
+        {/* Logo — patterned mark + wordmark, treated as a single link.
+            The flex gap-2.5 sits the mark and text close enough to read as
+            a unit but not so close they touch. */}
         <Link
           href="/"
-          className="font-serif text-lg tracking-tight text-ink hover:opacity-80"
+          className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
           aria-label="Tabeen Raoof — home"
         >
-          tabeen<span className="text-accent">.</span>dev
+          <Logo size={22} />
+          <span className="font-serif text-lg tracking-tight text-ink">
+            tabeen<span className="text-accent">.</span>dev
+          </span>
         </Link>
 
         {/* Nav links — sentence case, muted by default, ink when active */}

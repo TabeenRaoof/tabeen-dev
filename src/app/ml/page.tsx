@@ -54,7 +54,9 @@ export default function MLIndexPage() {
                     isWIP ? "opacity-60 hover:opacity-100" : ""
                   }`}
                 >
-                  {/* Tag row — primary tag in terracotta, status in neutral */}
+                  {/* Tag row — primary tag in orange, status in chartreuse.
+                      The chartreuse signals "this is ML work" — derived from
+                      the caterpillar's segment markings. */}
                   <div className="flex flex-wrap gap-1.5 mb-2.5">
                     {project.meta.tags?.[0] && (
                       <span className="text-[10px] text-accent bg-accent-soft px-2 py-0.5 rounded-full">
@@ -62,7 +64,7 @@ export default function MLIndexPage() {
                       </span>
                     )}
                     {project.meta.status && (
-                      <span className="text-[10px] text-muted bg-line px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] text-accent-2 bg-accent-2-soft px-2 py-0.5 rounded-full">
                         {project.meta.status}
                       </span>
                     )}

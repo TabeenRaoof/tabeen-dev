@@ -1,44 +1,47 @@
 @import "tailwindcss";
 
 /* ----------------------------------------------------------------- */
-/* Design tokens — Forest Dark                                       */
+/* Design tokens — Charcoal & Orange                                 */
 /* ----------------------------------------------------------------- */
-/* Single committed theme inspired by the Spurge Hawk-Moth caterpillar:
-   deep forest greens as the substrate, warm orange as the single accent,
-   sage green for muted text, cream for primary text.
+/* Palette derived from the Spurge Hawk-Moth caterpillar:
+   charcoal body, cream spots, warm orange head/horn,
+   chartreuse segment markings (used only for status indicators).
 
    Tailwind v4 reads these as utility classes:
-     --color-bg becomes bg-bg, text-bg, border-bg
-     --font-serif becomes font-serif                                  */
+     --color-bg becomes bg-bg, text-bg, border-bg                    */
 /* ----------------------------------------------------------------- */
 
 @theme {
-  /* Backgrounds — deepest green for the page, slightly lighter for cards/surfaces.
-     Both are saturated enough to feel intentionally green, not just "dark". */
-  --color-bg: #0F2419;
-  --color-surface: #1B3B2A;
+  /* Backgrounds — near-black with a warm undertone, not pure black.
+     Pure #000 reads cold and harsh; this charcoal feels intentional. */
+  --color-bg: #1A1614;
+  --color-surface: #221E1B;
 
-  /* Text — warm cream is easier on the eyes than pure white on dark backgrounds.
-     The cream picks up a hint of the caterpillar's spot color. */
+  /* Text — warm cream for primary. Pure white on dark is fatiguing for
+     reading; this slight warmth picks up the caterpillar's spot color. */
   --color-ink: #F5F2E8;
 
-  /* Sage green for secondary text — borrowed from the caterpillar's lighter
-     body markings. Sits halfway between the cream and the bg in luminance,
-     giving us a clear hierarchy without resorting to gray. */
-  --color-muted: #8FA388;
+  /* Muted text — warm gray that reads as a step down from cream
+     without resorting to a different hue. */
+  --color-muted: #8A8378;
 
-  /* Single accent — warm orange from the caterpillar's head and horn.
-     Used sparingly: logo dot, active nav, italic emphasis, research accent. */
+  /* Primary accent — warm orange from the caterpillar's head and horn.
+     Used sparingly: logo dot, italic emphasis, active nav, research border. */
   --color-accent: #D8602A;
 
-  /* Soft accent background — used for category pills.
-     A very dark warm tone that sits comfortably against the dark green bg. */
+  /* Soft accent background — for category pills.
+     A very dark warm tone that sits comfortably against the bg. */
   --color-accent-soft: #2A1A10;
 
-  /* Borders — subtle green-tinted line. Visible against bg, recedes against surface. */
-  --color-line: #1F3D2C;
+  /* Tertiary accent — chartreuse from the caterpillar's segment markings.
+     Used ONLY for status pills like "Active". Never for primary actions. */
+  --color-accent-2: #D4DC3F;
+  --color-accent-2-soft: #2A2A10;
 
-  /* Typography stack — same as the original direction.
+  /* Borders — subtle, slightly warmer than the bg to remain visible. */
+  --color-line: #2C2622;
+
+  /* Typography stack — same as before.
      Instrument Serif for warmth in headings, Inter for body, JetBrains for code. */
   --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -50,8 +53,8 @@
 /* ----------------------------------------------------------------- */
 
 html {
-  /* Hint to the browser that this site is dark — affects scrollbar styling
-     and form control defaults on supporting browsers */
+  /* Hint to the browser that this site is dark — affects scrollbar
+     styling and form control defaults on supporting browsers. */
   color-scheme: dark;
 }
 
@@ -82,9 +85,6 @@ h1, h2, h3, h4 {
 
 /* ----------------------------------------------------------------- */
 /* Prose styles for MDX content                                      */
-/* ----------------------------------------------------------------- */
-/* Applied via .prose class on MDX wrappers. Kept intentionally minimal —
-   over-styled prose looks like a CMS template.                       */
 /* ----------------------------------------------------------------- */
 
 .prose {

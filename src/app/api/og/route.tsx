@@ -21,14 +21,24 @@ export const runtime = "edge";
 // Standard Open Graph dimensions — 1200x630 is the LinkedIn/Twitter spec
 const SIZE = { width: 1200, height: 630 };
 
+// Color tokens — kept in sync with globals.css.
+// Hard-coded here because edge runtime can't read CSS variables.
+const COLORS = {
+  bg: "#1A1614",
+  surface: "#2C2622",
+  ink: "#F5F2E8",
+  muted: "#8A8378",
+  accent: "#D8602A",
+  chartreuse: "#D4DC3F",
+};
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
   // Truncate long titles so they fit in the layout
   const titleParam = searchParams.get("title") ?? "tabeen.dev";
-  const title = titleParam.length > 80
-    ? titleParam.slice(0, 77) + "…"
-    : titleParam;
+  const title =
+    titleParam.length > 80 ? titleParam.slice(0, 77) + "…" : titleParam;
 
   const category = searchParams.get("category") ?? "";
 
@@ -38,24 +48,40 @@ export async function GET(request: Request) {
         style={{
           width: "100%",
           height: "100%",
-          background: "#0F2419", // Forest dark — matches site bg
+          background: COLORS.bg,
           display: "flex",
           flexDirection: "column",
           padding: "80px",
           fontFamily: "serif",
-          color: "#F5F2E8", // Cream — matches site text
+          color: COLORS.ink,
         }}
       >
-        {/* Top bar — site brand */}
+        {/* Top bar — patterned mark + wordmark, mirroring site header */}
         <div
           style={{
-            fontSize: 28,
             display: "flex",
             alignItems: "center",
-            color: "#F5F2E8",
+            gap: 14,
           }}
         >
-          tabeen<span style={{ color: "#D8602A" }}>.</span>dev
+          {/* Logo mark — same V1 scattered pattern, scaled up.
+              Drawn directly with SVG via JSX since edge runtime
+              supports SVG primitives in ImageResponse. */}
+          <svg width={44} height={44} viewBox="0 0 22 22">
+            <rect width="22" height="22" fill={COLORS.surface} rx="3" />
+            <circle cx="5" cy="5" r="1.5" fill={COLORS.ink} />
+            <circle cx="11" cy="4" r="1.2" fill={COLORS.chartreuse} />
+            <circle cx="17" cy="6" r="1.3" fill={COLORS.ink} />
+            <circle cx="6" cy="10" r="1.2" fill={COLORS.chartreuse} />
+            <circle cx="11" cy="11" r="1.6" fill={COLORS.ink} />
+            <circle cx="16" cy="11" r="1.2" fill={COLORS.chartreuse} />
+            <circle cx="5" cy="16" r="1.3" fill={COLORS.ink} />
+            <circle cx="11" cy="17" r="1.2" fill={COLORS.chartreuse} />
+            <circle cx="17" cy="16" r="1.5" fill={COLORS.ink} />
+          </svg>
+          <div style={{ fontSize: 32, color: COLORS.ink, display: "flex" }}>
+            tabeen<span style={{ color: COLORS.accent }}>.</span>dev
+          </div>
         </div>
 
         {/* Spacer pushes title to vertical center */}
@@ -66,7 +92,7 @@ export async function GET(request: Request) {
           <div
             style={{
               fontSize: 22,
-              color: "#D8602A", // Orange accent
+              color: COLORS.accent,
               textTransform: "uppercase",
               letterSpacing: "0.08em",
               marginBottom: 24,
@@ -82,7 +108,7 @@ export async function GET(request: Request) {
           style={{
             fontSize: 72,
             lineHeight: 1.1,
-            color: "#F5F2E8",
+            color: COLORS.ink,
             letterSpacing: "-0.02em",
             maxWidth: "1040px",
             display: "flex",
@@ -98,7 +124,7 @@ export async function GET(request: Request) {
             marginTop: 40,
             width: 60,
             height: 4,
-            background: "#D8602A",
+            background: COLORS.accent,
           }}
         />
       </div>

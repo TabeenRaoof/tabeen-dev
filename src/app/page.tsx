@@ -88,9 +88,9 @@ export default function HomePage() {
                   {tag}
                 </span>
               ))}
-              {featured.meta.demo && (
-                <span className="text-[11px] text-muted bg-line px-2.5 py-0.5 rounded-full">
-                  Live demo
+              {featured.meta.status && (
+                <span className="text-[11px] text-accent-2 bg-accent-2-soft px-2.5 py-0.5 rounded-full">
+                  {featured.meta.status}
                 </span>
               )}
             </div>
