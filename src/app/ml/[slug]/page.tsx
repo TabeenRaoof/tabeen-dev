@@ -142,7 +142,7 @@ export default async function MLProjectPage({ params }: PageProps) {
                 <polyline points="15 3 21 3 21 9" />
                 <line x1="10" y1="14" x2="21" y2="3" />
               </svg>
-              Live demo
+              {meta.demoButtonLabel ?? "Live demo"}
             </a>
           )}
         </div>
@@ -154,18 +154,23 @@ export default async function MLProjectPage({ params }: PageProps) {
       {meta.demo && (
         <section className="pb-8">
           <p className="text-[11px] text-muted mb-2.5 uppercase tracking-wider">
-            Try it
+            {meta.demoLabel ?? "Try it"}
           </p>
-          <div className="bg-surface border border-line rounded-md overflow-hidden">
-            <iframe
-              src={meta.demo}
-              title={`${meta.title} — live demo`}
-              className="w-full h-[500px] border-0"
-              loading="lazy"
-              // sandbox restricts what the embedded content can do —
-              // important when embedding third-party (HF Spaces) content
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-            />
+          {/* Breakout container — extends beyond the article's max-w-2xl on
+              larger screens so the demo has room to breathe. On mobile it
+              stays within the page margins. */}
+          <div className="lg:mx-[-7rem] xl:mx-[-12rem]">
+            <div className="bg-surface border border-line rounded-md overflow-hidden">
+              <iframe
+                src={meta.demo}
+                title={`${meta.title} — live demo`}
+                className="w-full h-[600px] border-0"
+                loading="lazy"
+                // sandbox restricts what the embedded content can do —
+                // important when embedding third-party (HF Spaces) content
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              />
+            </div>
           </div>
         </section>
       )}

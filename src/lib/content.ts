@@ -39,6 +39,17 @@ export interface ContentMeta {
   github?: string;
   /** Live demo URL — embedded as iframe on the project detail page */
   demo?: string;
+  /** Custom label for the primary "Try it" section. Default: "Try it". */
+  demoLabel?: string;
+  /** Custom button label for the demo link. Default: "Live demo". */
+  demoButtonLabel?: string;
+  /** Optional second embedded demo — for projects that have multiple artifacts.
+   *  Example: a Flask app AND a separate HTML visualizer. */
+  demo2?: {
+    url: string;
+    label: string; // Heading shown above this demo's iframe
+    description?: string; // Optional explanatory line beneath the heading
+  };
   /** YouTube/Vimeo URL or video file path */
   video?: string;
   /** Path to architecture diagram image, relative to /public */

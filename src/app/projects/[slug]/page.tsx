@@ -111,7 +111,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 <polyline points="15 3 21 3 21 9" />
                 <line x1="10" y1="14" x2="21" y2="3" />
               </svg>
-              Live demo
+              {meta.demoButtonLabel ?? "Live demo"}
             </a>
           )}
         </div>
@@ -119,9 +119,16 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
       {meta.demo && (
         <section className="pb-8">
-          <p className="text-[11px] text-muted mb-2.5 uppercase tracking-wider">Try it</p>
-          <div className="bg-surface border border-line rounded-md overflow-hidden">
-            <iframe src={meta.demo} title={`${meta.title} — live demo`} className="w-full h-[500px] border-0" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
+          <p className="text-[11px] text-muted mb-2.5 uppercase tracking-wider">
+            {meta.demoLabel ?? "Try it"}
+          </p>
+          {/* Breakout container — extends beyond the article's max-w-2xl on
+              larger screens so the demo has room to breathe. On mobile it stays
+              within the page margins. */}
+          <div className="lg:mx-[-7rem] xl:mx-[-12rem]">
+            <div className="bg-surface border border-line rounded-md overflow-hidden">
+              <iframe src={meta.demo} title={`${meta.title} — live demo`} className="w-full h-[600px] border-0" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
+            </div>
           </div>
         </section>
       )}
@@ -137,6 +144,31 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           }}
         />
       </div>
+
+      {/* Optional second demo — for projects with multiple artifacts.
+          Renders only when frontmatter has demo2 set. */}
+      {meta.demo2 && (
+        <section className="pb-8">
+          <h2 className="font-serif text-2xl text-ink mb-2">{meta.demo2.label}</h2>
+          {meta.demo2.description && (
+            <p className="text-sm text-muted leading-relaxed mb-4">
+              {meta.demo2.description}
+            </p>
+          )}
+          {/* Breakout — same wider container as the primary demo above */}
+          <div className="lg:mx-[-7rem] xl:mx-[-12rem]">
+            <div className="bg-surface border border-line rounded-md overflow-hidden">
+              <iframe
+                src={meta.demo2.url}
+                title={`${meta.title} — ${meta.demo2.label}`}
+                className="w-full h-[700px] border-0"
+                loading="lazy"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       {meta.diagram && (
         <section className="pb-8">

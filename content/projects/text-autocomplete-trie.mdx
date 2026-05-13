@@ -1,0 +1,57 @@
+---
+title: "Text Autocomplete with a Trie"
+description: "Interactive autocomplete engine built on a Trie data structure, serving 370,000 dictionary words at sub-millisecond latency."
+date: "2026-04-23"
+tags: ["Algorithms", "Data structures"]
+stack: ["Python", "Flask", "HTML", "JavaScript", "gunicorn", "Docker"]
+github: "https://github.com/TabeenRaoof/autocomplete-with-trie"
+# Primary demo — visualizer is the more interesting artifact to land on first.
+# Self-hosted at /visualizer/index.html (pure HTML/JS, no backend needed).
+demo: "/visualizer/index.html"
+demoLabel: "Try the visualizer"
+demoButtonLabel: "Open visualizer"
+# Secondary demo — the production Flask autocomplete app on Hugging Face Spaces.
+# Loaded second because the visualizer makes the *why* of the Trie clearer.
+demo2:
+  url: "https://tabeenraoof-trie-autocomplete.hf.space"
+  label: "The autocomplete itself"
+  description: "The Flask app I built for CS455. Type a prefix to get suggestions from a 370,000-word dictionary, ranked by frequency. Insert, delete, search, and boost operations are exposed below the search box."
+status: "Complete"
+---
+
+## Overview
+
+Built as the signature project for CS455 (Algorithms & Structured Programming) at SFBU, this is a text autocomplete engine backed by a Trie. The web UI accepts a prefix, queries the Trie, and returns the top suggestions ranked by frequency — typically in under a millisecond, even with a 370,000-word dictionary loaded.
+
+The interesting part isn't the Trie itself — that's a well-known data structure. What's interesting is comparing it side-by-side with a Binary Search Tree on the same operations and seeing exactly *why* a Trie wins for this problem.
+
+## Why a Trie
+
+Autocomplete is a prefix-matching problem. Given the string "app", I want to find every word in the dictionary that starts with those three characters, then rank them.
+
+A naive approach scans the entire dictionary on every keystroke. A BST is faster but still has to traverse comparing whole words. A Trie stores one character per node, so finding all completions of "app" means walking three nodes from the root and then collecting everything in the subtree below.
+
+The key property: **lookup time depends on the length of the query, not the size of the dictionary.** Searching for "app" in a 100-word dictionary takes the same number of operations as searching in a 100,000-word one. That's why every serious autocomplete system uses a Trie or one of its variants.
+
+## What's in the codebase
+
+The repo has a few distinct pieces:
+
+- **`trie.py`** — the data structure itself. Insert, search, delete, prefix-collect, frequency boost.
+- **`dictionary_loader.py`** — reads the 4MB dictionary file, normalizes words, populates the Trie.
+- **`app.py`** — the Flask web UI you're using above. Stateful in-memory Trie shared across requests.
+- **`main.py`** — a CLI version of the same thing for terminal-only use.
+- **`benchmark.py`** — measures Trie operations against a list-based baseline.
+- **`visualizer-trie-vs-bst.html`** — the standalone HTML visualizer embedded below.
+
+Everything is covered by a pytest suite — 56 tests passing across the Trie operations, dictionary loading, and edge cases like empty strings, mixed case, and unicode.
+
+## What I learned building it
+
+The version of this project I'd write today would be different from the one I shipped. A few lessons:
+
+1. **Frequency ranking is a separate concern from the data structure.** I baked frequency into Trie nodes, which works but couples two responsibilities. A cleaner design would keep frequencies in a sidecar dict keyed by word, letting the Trie stay a pure prefix index.
+
+2. **Tries are memory-hungry at the leaves.** With 370k words averaging ~9 characters, the Trie has on the order of millions of nodes. A more sophisticated implementation would compress single-child chains (a radix tree) or use a DAWG.
+
+3. **The web UI was harder than the algorithm.** I spent more time on the input debouncing, the bar chart rendering, and the live latency display than on the Trie itself. That ratio was a good reality check on what "shipping" actually means.
