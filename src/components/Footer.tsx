@@ -11,7 +11,7 @@ export function Footer() {
         <span>© {year} Tabeen Raoof</span>
         <div className="flex gap-4">
           <a
-            href="https://github.com/tabeen"
+            href="https://github.com/tabeenraoof"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-ink transition-colors"
@@ -19,7 +19,7 @@ export function Footer() {
             GitHub
           </a>
           <a
-            href="https://linkedin.com/in/tabeen"
+            href="https://www.linkedin.com/in/tabeenraoof"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-ink transition-colors"
@@ -27,7 +27,7 @@ export function Footer() {
             LinkedIn
           </a>
           <a
-            href="mailto:hello@tabeen.dev"
+            href="mailto:raoof.tabeen@gmail.com"
             className="hover:text-ink transition-colors"
           >
             Email
