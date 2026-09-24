@@ -1,20 +1,71 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getFeaturedItem, getAllContent, formatDate } from "@/lib/content";
 
 // The home page is a server component — content is read at build time
 // from the filesystem, so the page is fully static.
 //
-// Three sections:
+// Sections:
 //   1. Hero — name, one-line intro, primary CTAs
-//   2. Featured project — single highlighted ML project
-//   3. Recent writing — last 3 blog posts (only shown if writing exists)
+//   2. Now — one sentence on current work, dated
+//   3. Featured project — single highlighted item from Work
+//   4. Recent notes — last 3 posts (only shown if any exist)
+
+const DESCRIPTION =
+  "Applied AI/ML engineer in the Bay Area. Computer-vision research, backend services, and enterprise delivery experience.";
+
+export const metadata: Metadata = {
+  title: "Tabeen Raoof — Applied AI/ML Engineer",
+  description: DESCRIPTION,
+  alternates: {
+    canonical: "https://tabeen.dev",
+  },
+  openGraph: {
+    title: "Tabeen Raoof — Applied AI/ML Engineer",
+    description: DESCRIPTION,
+    url: "https://tabeen.dev",
+  },
+  twitter: {
+    title: "Tabeen Raoof — Applied AI/ML Engineer",
+    description: DESCRIPTION,
+  },
+};
+
+// JSON-LD Person schema — helps search engines and AI assistants
+// resolve who this site belongs to.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Tabeen Raoof",
+  jobTitle: "Applied AI/ML Engineer",
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "San Francisco Bay University",
+  },
+  url: "https://tabeen.dev",
+  sameAs: [
+    "https://github.com/tabeenraoof",
+    "https://www.linkedin.com/in/tabeenraoof",
+  ],
+};
 
 export default function HomePage() {
-  const featured = getFeaturedItem("ml");
-  const recentWriting = getAllContent("writing").slice(0, 3);
+  // Featured item can live in either Work or Research — check both,
+  // preferring Work since production delivery is the primary pitch here.
+  const featuredWork = getFeaturedItem("work");
+  const featuredResearch = getFeaturedItem("research");
+  const featured = featuredWork ?? featuredResearch;
+  const featuredCategory = featuredWork ? "work" : "research";
+  const recentNotes = getAllContent("notes").slice(0, 3);
 
   return (
     <div className="max-w-3xl mx-auto px-6 sm:px-8">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
+
       {/* ----------------------------------------------------------------- */}
       {/* Hero section                                                      */}
       {/* ----------------------------------------------------------------- */}
@@ -23,20 +74,21 @@ export default function HomePage() {
           Tabeen Raoof — Bay Area
         </p>
         <h1 className="text-4xl sm:text-5xl text-ink mb-6 max-w-2xl leading-[1.15]">
-          Engineer working at the intersection of{" "}
-          <em className="text-accent italic font-serif">machine learning</em>{" "}
-          and product.
+          Engineer building{" "}
+          <em className="text-accent italic font-serif">applied AI systems</em>{" "}
+          — and making them work in production.
         </h1>
         <p className="text-base text-muted leading-relaxed max-w-xl mb-8">
-          MS Computer Science at SFBU. Currently building at FiPet. Previously
-          TPM at Yardi, project management at the United Nations.
+          MS Computer Science (AI/ML) at SFBU, graduating December 2026.
+          Computer-vision research, backend services, and three years of
+          enterprise delivery before that.
         </p>
         <div className="flex flex-wrap gap-4">
           <Link
-            href="/ml"
+            href="/work"
             className="inline-flex items-center gap-1.5 text-sm text-ink px-4 py-2.5 border border-ink rounded-md hover:bg-surface transition-colors"
           >
-            See ML work
+            See my work
             <svg
               width="14"
               height="14"
@@ -46,18 +98,32 @@ export default function HomePage() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-            >
+             aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
             </svg>
           </Link>
           <Link
-            href="/writing"
+            href="/research"
             className="inline-flex items-center gap-1.5 text-sm text-muted px-4 py-2.5 hover:text-ink transition-colors"
           >
-            Read writing
+            Research
           </Link>
         </div>
+      </section>
+
+      {/* ----------------------------------------------------------------- */}
+      {/* Now — one sentence on current focus, with a visible last-updated  */}
+      {/* date so it doesn't quietly go stale.                              */}
+      {/* TODO(tabeen): replace with the actual current-work sentence and   */}
+      {/* keep the date current.                                            */}
+      {/* ----------------------------------------------------------------- */}
+      <section className="pb-12 border-t border-line pt-8">
+        <p className="text-sm text-muted leading-relaxed">
+          <span className="text-ink font-medium">Now — </span>
+          TODO(tabeen): one sentence on current work.{" "}
+          <span className="text-xs text-muted">(Last updated Sep 2026)</span>
+        </p>
       </section>
 
       {/* ----------------------------------------------------------------- */}
@@ -68,15 +134,15 @@ export default function HomePage() {
           <div className="flex justify-between items-baseline mb-6">
             <h2 className="font-serif text-xl text-ink">Featured</h2>
             <Link
-              href="/ml"
+              href={`/${featuredCategory}`}
               className="text-xs text-muted hover:text-ink transition-colors"
             >
-              All ML projects →
+              {featuredCategory === "work" ? "All work" : "All research"} →
             </Link>
           </div>
 
           <Link
-            href={`/ml/${featured.slug}`}
+            href={`/${featuredCategory}/${featured.slug}`}
             className="block bg-surface border border-line rounded-lg p-7 hover:border-accent transition-colors group"
           >
             <div className="flex flex-wrap gap-2 mb-3">
@@ -107,23 +173,23 @@ export default function HomePage() {
       {/* ----------------------------------------------------------------- */}
       {/* Recent writing — only renders if posts exist                      */}
       {/* ----------------------------------------------------------------- */}
-      {recentWriting.length > 0 && (
+      {recentNotes.length > 0 && (
         <section className="py-12 border-t border-line">
           <div className="flex justify-between items-baseline mb-6">
-            <h2 className="font-serif text-xl text-ink">Recent writing</h2>
+            <h2 className="font-serif text-xl text-ink">Recent notes</h2>
             <Link
-              href="/writing"
+              href="/notes"
               className="text-xs text-muted hover:text-ink transition-colors"
             >
-              All writing →
+              All notes →
             </Link>
           </div>
 
           <div className="flex flex-col">
-            {recentWriting.map((post) => (
+            {recentNotes.map((post) => (
               <Link
                 key={post.slug}
-                href={`/writing/${post.slug}`}
+                href={`/notes/${post.slug}`}
                 className="py-4 border-b border-line last:border-b-0 group flex justify-between items-baseline gap-4"
               >
                 <div className="flex-1 min-w-0">

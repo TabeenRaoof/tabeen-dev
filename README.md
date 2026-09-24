@@ -67,11 +67,11 @@ When you're happy with changes, commit and push to GitHub. Cloudflare Pages will
 
 ## Adding a project
 
-Every project is a single MDX file in `content/ml/` (for ML/DS) or `content/projects/` (for everything else). Adding a project = creating a file and pushing to git.
+Every project is a single MDX file in `content/work/` (for ML/DS) or `content/work/` (for everything else). Adding a project = creating a file and pushing to git.
 
 ### Steps
 
-1. Create a new file: `content/ml/your-project-slug.mdx` (the slug becomes the URL: `/ml/your-project-slug`)
+1. Create a new file: `content/work/your-project-slug.mdx` (the slug becomes the URL: `/work/your-project-slug` (or `/research/your-project-slug`))
 2. Fill in the frontmatter and write the body in Markdown
 3. Commit and push
 
@@ -134,10 +134,10 @@ If you don't include a field, that section simply doesn't appear. This is what k
 
 ## Adding a blog post
 
-Same pattern, in `content/writing/`:
+Same pattern, in `content/notes/`:
 
 ```bash
-content/writing/2026-05-15-some-thoughts-on-something.mdx
+content/notes/2026-05-15-some-thoughts-on-something.mdx
 ```
 
 Frontmatter is simpler:
@@ -302,7 +302,7 @@ Edit `src/app/about/page.tsx` directly. It's not MDX-driven because there's only
 
 1. Create `src/app/your-section/page.tsx`
 2. Add a `<NavLink href="/your-section">Your Section</NavLink>` to `src/components/Header.tsx`
-3. If it should pull from MDX content, mirror the pattern in `src/app/ml/page.tsx`
+3. If it should pull from MDX content, mirror the pattern in `src/app/work/page.tsx`
 
 ---
 
@@ -311,9 +311,9 @@ Edit `src/app/about/page.tsx` directly. It's not MDX-driven because there's only
 ```
 tabeen-dev/
 ├── content/                    # All your MDX content
-│   ├── ml/                     # ML/DS projects
-│   ├── projects/               # Other projects
-│   └── writing/                # Blog posts
+│   ├── work/                    # Production & applied engineering
+│   ├── research/                # Papers-in-progress, research directions
+│   └── notes/                   # Short technical notes
 ├── public/                     # Static assets
 │   ├── diagrams/               # Architecture diagrams referenced in projects
 │   ├── og/                     # Custom OG images (optional overrides)
@@ -321,9 +321,9 @@ tabeen-dev/
 ├── src/
 │   ├── app/                    # Next.js App Router pages
 │   │   ├── api/og/             # Auto-generated OG image route
-│   │   ├── ml/                 # ML pages (index + [slug])
-│   │   ├── projects/           # Projects pages
-│   │   ├── writing/            # Writing pages
+│   │   ├── work/               # Work pages (index + [slug])
+│   │   ├── research/           # Research pages (index + [slug])
+│   │   ├── notes/              # Notes pages (index + [slug])
 │   │   ├── about/              # About page
 │   │   ├── contact/            # Contact page
 │   │   ├── globals.css         # Design tokens + base styles
@@ -352,9 +352,9 @@ tabeen-dev/
 
 | Task | What to do |
 |---|---|
-| Add an ML project | Create `content/ml/slug.mdx` |
-| Add a project | Create `content/projects/slug.mdx` |
-| Add a blog post | Create `content/writing/slug.mdx` |
+| Add a Work item | Create `content/work/slug.mdx` |
+| Add a Research item | Create `content/research/slug.mdx` |
+| Add a Note | Create `content/notes/slug.mdx` |
 | Change which project is featured on home | Set `featured: true` in one project's frontmatter (and false on others) |
 | Update your bio | Edit `src/app/about/page.tsx` |
 | Change colors | Edit `@theme` block in `src/app/globals.css` |

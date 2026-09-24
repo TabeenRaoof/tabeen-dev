@@ -11,70 +11,66 @@ import {
 } from "@/lib/content";
 import type { Metadata } from "next";
 
-// Dynamic route for individual ML project pages.
-// generateStaticParams pre-renders every project at build time —
-// this is what makes the site fast and Cloudflare-Pages friendly
-// (no server runtime needed, just static HTML files).
+// Dynamic route for individual research entries.
+// generateStaticParams pre-renders every entry at build time.
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Generate one static page per project at build time
 export async function generateStaticParams() {
-  const projects = getAllContent("ml");
-  return projects.map((p) => ({ slug: p.slug }));
+  const items = getAllContent("research");
+  return items.map((p) => ({ slug: p.slug }));
 }
 
-// Per-page metadata — feeds OG tags for LinkedIn previews etc.
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const project = getContentBySlug("ml", slug);
+  const item = getContentBySlug("research", slug);
 
-  if (!project) return {};
+  if (!item) return {};
 
-  // OG image: use custom one from frontmatter if provided, else auto-generated
-  const ogImage = project.meta.ogImage ?? `/api/og?title=${encodeURIComponent(project.meta.title)}&category=ML`;
+  const ogImage =
+    item.meta.ogImage ??
+    `/api/og?title=${encodeURIComponent(item.meta.title)}&category=Research`;
 
   return {
-    title: project.meta.title,
-    description: project.meta.description,
+    title: item.meta.title,
+    description: item.meta.description,
+    alternates: { canonical: `https://tabeen.dev/research/${slug}` },
     openGraph: {
-      title: project.meta.title,
-      description: project.meta.description,
+      title: item.meta.title,
+      description: item.meta.description,
       type: "article",
-      publishedTime: project.meta.date,
+      url: `https://tabeen.dev/research/${slug}`,
+      publishedTime: item.meta.date,
       images: [{ url: ogImage }],
     },
     twitter: {
       card: "summary_large_image",
-      title: project.meta.title,
-      description: project.meta.description,
+      title: item.meta.title,
+      description: item.meta.description,
       images: [ogImage],
     },
   };
 }
 
-export default async function MLProjectPage({ params }: PageProps) {
+export default async function ResearchDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const project = getContentBySlug("ml", slug);
+  const item = getContentBySlug("research", slug);
 
-  if (!project) {
+  if (!item) {
     notFound();
   }
 
-  const { meta, body } = project;
+  const { meta, body } = item;
 
   return (
     <article className="max-w-2xl mx-auto px-6 sm:px-8">
-      {/* ----------------------------------------------------------------- */}
-      {/* Header — back link, tags, title, links                            */}
-      {/* ----------------------------------------------------------------- */}
       <header className="pt-12 pb-8">
         <Link
-          href="/ml"
+          href="/research"
           className="inline-flex items-center gap-1 text-xs text-muted hover:text-ink transition-colors mb-6"
         >
           <svg
@@ -86,11 +82,11 @@ export default async function MLProjectPage({ params }: PageProps) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-          >
+           aria-hidden="true">
             <line x1="19" y1="12" x2="5" y2="12" />
             <polyline points="12 19 5 12 12 5" />
           </svg>
-          ML
+          Research
         </Link>
 
         <div className="flex flex-wrap gap-1.5 mb-3.5">
@@ -115,7 +111,6 @@ export default async function MLProjectPage({ params }: PageProps) {
         </p>
         <p className="text-xs text-muted mb-5">{formatDate(meta.date)}</p>
 
-        {/* Action buttons row — only renders buttons that have URLs */}
         <div className="flex flex-wrap gap-3 text-xs">
           {meta.github && (
             <a
@@ -124,7 +119,7 @@ export default async function MLProjectPage({ params }: PageProps) {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-ink px-3 py-1.5 border border-ink rounded-md hover:bg-surface transition-colors"
             >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
               </svg>
               GitHub
@@ -137,7 +132,7 @@ export default async function MLProjectPage({ params }: PageProps) {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-ink px-3 py-1.5 border border-ink rounded-md hover:bg-surface transition-colors"
             >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                 <polyline points="15 3 21 3 21 9" />
                 <line x1="10" y1="14" x2="21" y2="3" />
@@ -148,17 +143,11 @@ export default async function MLProjectPage({ params }: PageProps) {
         </div>
       </header>
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Live demo embed — shown if demo URL is provided                   */}
-      {/* ----------------------------------------------------------------- */}
       {meta.demo && (
         <section className="pb-8">
           <p className="text-[11px] text-muted mb-2.5 uppercase tracking-wider">
             {meta.demoLabel ?? "Try it"}
           </p>
-          {/* Breakout container — extends beyond the article's max-w-2xl on
-              larger screens so the demo has room to breathe. On mobile it
-              stays within the page margins. */}
           <div className="lg:mx-[-7rem] xl:mx-[-12rem]">
             <div className="bg-surface border border-line rounded-md overflow-hidden">
               <iframe
@@ -166,8 +155,6 @@ export default async function MLProjectPage({ params }: PageProps) {
                 title={`${meta.title} — live demo`}
                 className="w-full h-[600px] border-0"
                 loading="lazy"
-                // sandbox restricts what the embedded content can do —
-                // important when embedding third-party (HF Spaces) content
                 sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
               />
             </div>
@@ -175,9 +162,6 @@ export default async function MLProjectPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* ----------------------------------------------------------------- */}
-      {/* MDX body — the writeup itself                                     */}
-      {/* ----------------------------------------------------------------- */}
       <div className="prose pb-8">
         <MDXRemote
           source={body}
@@ -190,9 +174,6 @@ export default async function MLProjectPage({ params }: PageProps) {
         />
       </div>
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Architecture diagram — only renders if path is provided           */}
-      {/* ----------------------------------------------------------------- */}
       {meta.diagram && (
         <section className="pb-8">
           <h2 className="font-serif text-2xl text-ink mb-4">Architecture</h2>
@@ -208,9 +189,6 @@ export default async function MLProjectPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Video — shown if video URL is provided                            */}
-      {/* ----------------------------------------------------------------- */}
       {meta.video && (
         <section className="pb-8">
           <h2 className="font-serif text-2xl text-ink mb-4">Demo video</h2>
@@ -227,15 +205,9 @@ export default async function MLProjectPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Research section — only renders if research is set in frontmatter */}
-      {/* This is the section you specifically asked for — keeps academic   */}
-      {/* work distinct from the general project writeup.                   */}
-      {/* ----------------------------------------------------------------- */}
       {meta.research && (
         <section className="pb-8">
           <div className="flex items-center gap-2 mb-3.5">
-            {/* Microscope icon — signals "this is the research bit" */}
             <svg
               width="18"
               height="18"
@@ -246,6 +218,7 @@ export default async function MLProjectPage({ params }: PageProps) {
               strokeLinecap="round"
               strokeLinejoin="round"
               className="text-accent"
+              aria-hidden="true"
             >
               <path d="M6 18h8" />
               <path d="M3 22h18" />
@@ -254,7 +227,7 @@ export default async function MLProjectPage({ params }: PageProps) {
               <path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z" />
               <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3" />
             </svg>
-            <h2 className="font-serif text-2xl text-ink">Research</h2>
+            <h2 className="font-serif text-2xl text-ink">Status</h2>
           </div>
 
           {meta.research.summary && (
@@ -273,7 +246,7 @@ export default async function MLProjectPage({ params }: PageProps) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-accent hover:underline"
               >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <polyline points="14 2 14 8 20 8" />
                   <line x1="16" y1="13" x2="8" y2="13" />
@@ -296,9 +269,6 @@ export default async function MLProjectPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Tech stack pills                                                  */}
-      {/* ----------------------------------------------------------------- */}
       {meta.stack && meta.stack.length > 0 && (
         <section className="pb-16">
           <h2 className="font-serif text-2xl text-ink mb-3.5">Stack</h2>

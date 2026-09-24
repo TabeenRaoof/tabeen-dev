@@ -18,31 +18,42 @@ import { Logo } from "./Logo";
 
 export function Header() {
   return (
-    <header className="border-b border-line">
-      <div className="max-w-3xl mx-auto px-5 sm:px-8 py-5 flex items-center justify-between gap-4">
-        {/* Logo block — shrink-0 prevents the logo from being squished by a
-            crowded nav. The flex gap-2.5 keeps the mark close to the wordmark
-            without touching. */}
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 hover:opacity-80 transition-opacity shrink-0"
-          aria-label="Tabeen Raoof — home"
-        >
-          <Logo size={22} />
-          <span className="font-serif text-lg tracking-tight text-ink">
-            tabeen<span className="text-accent">.</span>dev
-          </span>
-        </Link>
+    <>
+      {/* Skip link — visually hidden until focused, lets keyboard users
+          jump past the header/nav straight to page content. */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-surface focus:text-ink focus:px-4 focus:py-2 focus:rounded-md focus:border focus:border-accent"
+      >
+        Skip to content
+      </a>
+      <header className="border-b border-line">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8 py-5 flex items-center justify-between gap-4">
+          {/* Logo block — shrink-0 prevents the logo from being squished by a
+              crowded nav. The flex gap-2.5 keeps the mark close to the wordmark
+              without touching. */}
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 hover:opacity-80 transition-opacity shrink-0"
+            aria-label="Tabeen Raoof — home"
+          >
+            <Logo size={22} />
+            <span className="font-serif text-lg tracking-tight text-ink">
+              tabeen<span className="text-accent">.</span>dev
+            </span>
+          </Link>
 
-        {/* Nav links — tighter gap on mobile (gap-4), more breathing
-            room on desktop (sm:gap-7). */}
-        <nav className="flex items-center gap-4 sm:gap-7">
-          <NavLink href="/ml">ML</NavLink>
-          <NavLink href="/projects">Projects</NavLink>
-          <NavLink href="/writing">Writing</NavLink>
-          <NavLink href="/about">About</NavLink>
-        </nav>
-      </div>
-    </header>
+          {/* Nav links — tighter gap on mobile (gap-4), more breathing
+              room on desktop (sm:gap-7). */}
+          <nav className="flex items-center gap-4 sm:gap-7">
+            <NavLink href="/work">Work</NavLink>
+            <NavLink href="/research">Research</NavLink>
+            <NavLink href="/notes">Notes</NavLink>
+            <NavLink href="/about">About</NavLink>
+            <NavLink href="/contact">Contact</NavLink>
+          </nav>
+        </div>
+      </header>
+    </>
   );
 }

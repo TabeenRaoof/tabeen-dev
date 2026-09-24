@@ -27,7 +27,7 @@ const COLORS = {
   bg: "#1A1614",
   surface: "#2C2622",
   ink: "#F5F2E8",
-  muted: "#8A8378",
+  muted: "#A69F91",
   accent: "#D8602A",
   chartreuse: "#D4DC3F",
 };

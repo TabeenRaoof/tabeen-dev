@@ -1,0 +1,21 @@
+---
+title: "An evidence-based decision not to fine-tune"
+description: "When accuracy plateaus, fine-tuning is the default next move. Three independent signals from TruPhoto said not to — and what to check before assuming more training will help."
+date: "2026-05-04"
+---
+
+When a model's accuracy plateaus, the default next move is to fine-tune the backbone. More task-specific weight updates, the reasoning goes, should mean better task performance. On [TruPhoto](/research/truphoto), a three-class image authenticity classifier, three independent signals said that would have been the wrong call — and it's worth writing down why, because the decision *not* to do the obvious next thing is easy to lose track of later.
+
+## The three signals
+
+**Per-source spread was far above the safe threshold.** Accuracy on the AI-Generated class varied by 62.7 percentage points depending on which generator produced the image; on the Real class, it varied by 59.4 points depending on source. Both are far above the roughly 15-point spread that's generally considered the ceiling at which fine-tuning is still a safe bet. A model with that much per-source variance isn't underfit in a way fine-tuning reliably fixes — it's telling you the representation itself doesn't generalize evenly across the data it needs to cover.
+
+**Accuracy fell when training data increased 2.5×.** If the problem were simply not enough data, more data should have helped, even marginally. It didn't — accuracy dropped. That's a strong signal the model had hit a representational ceiling, not a data-volume shortage. Fine-tuning on more of the same kind of data wasn't likely to move that ceiling.
+
+**One failure mode was diagnosable as a representation problem, not a capacity problem.** StyleGAN3 images were classified correctly only 37% of the time — the worst per-generator result in the whole evaluation. StyleGAN3's alias-free upsampling is specifically designed to avoid the spectral artifacts that most GAN detectors, including the frequency-domain features used here, rely on. That's not a case of "the model needs to try harder" — it's a case of the signal the model depends on being largely absent from the input for that generator. Fine-tuning does not manufacture a signal that isn't there.
+
+## The decision rule
+
+Put together, these three signals move in the same direction: the ceiling was structural, not a matter of undertrained weights. Fine-tuning is well-suited to closing a gap caused by insufficient adaptation to the target distribution. It is poorly suited to closing a gap caused by the frozen features genuinely lacking the information needed to solve a subset of cases.
+
+The general habit I'm trying to keep from this: before reaching for fine-tuning as the fix for a plateau, measure cross-source (or more broadly, cross-condition) accuracy spread. A small spread with a plateau is a normal case for fine-tuning. A large spread, especially alongside a specific, explainable failure like the StyleGAN3 case, is a sign that more training on the same representation won't move the number — and that the actual fix has to change what the model is looking at, not how hard it's looking.

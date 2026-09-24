@@ -22,7 +22,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const posts = getAllContent("writing");
+  const posts = getAllContent("notes");
   return posts.map((p) => ({ slug: p.slug }));
 }
 
@@ -30,21 +30,23 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getContentBySlug("writing", slug);
+  const post = getContentBySlug("notes", slug);
 
   if (!post) return {};
 
   const ogImage =
     post.meta.ogImage ??
-    `/api/og?title=${encodeURIComponent(post.meta.title)}&category=Writing`;
+    `/api/og?title=${encodeURIComponent(post.meta.title)}&category=Notes`;
 
   return {
     title: post.meta.title,
     description: post.meta.description,
+    alternates: { canonical: `https://tabeen.dev/notes/${slug}` },
     openGraph: {
       title: post.meta.title,
       description: post.meta.description,
       type: "article",
+      url: `https://tabeen.dev/notes/${slug}`,
       publishedTime: post.meta.date,
       images: [{ url: ogImage }],
     },
@@ -57,9 +59,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function WritingPostPage({ params }: PageProps) {
+export default async function NotesPostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = getContentBySlug("writing", slug);
+  const post = getContentBySlug("notes", slug);
 
   if (!post) notFound();
 
@@ -69,14 +71,14 @@ export default async function WritingPostPage({ params }: PageProps) {
     <article className="max-w-2xl mx-auto px-6 sm:px-8">
       <header className="pt-12 pb-8">
         <Link
-          href="/writing"
+          href="/notes"
           className="inline-flex items-center gap-1 text-xs text-muted hover:text-ink transition-colors mb-6"
         >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <line x1="19" y1="12" x2="5" y2="12" />
             <polyline points="12 19 5 12 12 5" />
           </svg>
-          Writing
+          Notes
         </Link>
 
         <h1 className="text-3xl sm:text-4xl text-ink mb-3">{meta.title}</h1>

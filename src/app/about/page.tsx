@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Background, experience, and how to get in touch.",
+  description:
+    "Applied AI/ML engineer in the Bay Area — background, experience, and how to get in touch.",
+  alternates: { canonical: "https://tabeen.dev/about" },
 };
 
 // About page is hand-written rather than MDX-driven — there's only one,
@@ -19,24 +21,26 @@ export default function AboutPage() {
 
         <div className="prose">
           <p>
-            I&apos;m Tabeen Raoof, a Bay Area-based engineer working at the
-            intersection of machine learning and product. I&apos;m currently
-            pursuing an MS in Computer Science at SFBU (concentration in AI/ML)
-            and building at FiPet, a gamified financial education app.
+            I&apos;m Tabeen Raoof, a Bay Area-based applied AI/ML engineer.
+            I&apos;m pursuing an MS in Computer Science at SFBU (concentration
+            in AI/ML), graduating December 2026, with a background spanning
+            computer-vision research, backend services, and three years of
+            enterprise delivery before that.
           </p>
 
           <p>
             My path to engineering wasn&apos;t straight. I started in
-            international project management at the United Nations, then moved
-            into Technical Account Management at Yardi Systems in PropTech
-            before going back to school. That mix shows up in how I work: I
-            care about technical depth, but I also think hard about who the
-            user is and what business problem the system actually solves.
+            international project management at the United Nations, running
+            humanitarian infrastructure programmes, then moved into Technical
+            Account Management at Yardi Systems in PropTech before going back
+            to school. That mix shows up in how I work: I care about technical
+            depth, but I also think hard about who the user is and what
+            problem the system actually solves.
           </p>
 
           <p>
             Outside of school and work, I read about value investing, follow
-            geopolitics, and spend time with my partner and our young child.
+            geopolitics, and spend time with my wife and two children.
           </p>
         </div>
       </section>
@@ -44,35 +48,59 @@ export default function AboutPage() {
       <section className="pb-12 border-t border-line pt-10">
         <h2 className="font-serif text-2xl text-ink mb-6">Experience</h2>
         <div className="flex flex-col gap-5">
+          {/* TODO(tabeen): add current role once approved (Xylo AI Studios
+              page/mentions are pending approval and are intentionally left
+              out of this restructure). */}
           <div className="flex justify-between items-baseline gap-4">
             <div className="flex-1">
               <p className="text-sm text-ink font-medium">FiPet</p>
-              <p className="text-xs text-muted">Software Engineering Intern</p>
+              <p className="text-xs text-muted">Software Engineer Intern</p>
             </div>
-            <span className="text-xs text-muted whitespace-nowrap">2026 — present</span>
+            <span className="text-xs text-muted whitespace-nowrap">Feb 2026 — Jun 2026</span>
           </div>
           <div className="flex justify-between items-baseline gap-4">
             <div className="flex-1">
               <p className="text-sm text-ink font-medium">SFBU</p>
               <p className="text-xs text-muted">MS Computer Science (AI/ML)</p>
             </div>
-            <span className="text-xs text-muted whitespace-nowrap">2025 — present</span>
+            <span className="text-xs text-muted whitespace-nowrap">
+              {/* TODO(tabeen): confirm program start date */}
+              TODO(tabeen): start date — Dec 2026
+            </span>
           </div>
           <div className="flex justify-between items-baseline gap-4">
             <div className="flex-1">
               <p className="text-sm text-ink font-medium">Yardi Systems</p>
               <p className="text-xs text-muted">Technical Account Manager</p>
             </div>
-            <span className="text-xs text-muted whitespace-nowrap">— 2025</span>
+            <span className="text-xs text-muted whitespace-nowrap">Jul 2022 — Aug 2025</span>
           </div>
           <div className="flex justify-between items-baseline gap-4">
             <div className="flex-1">
-              <p className="text-sm text-ink font-medium">United Nations</p>
-              <p className="text-xs text-muted">Project Manager (international)</p>
+              <p className="text-sm text-ink font-medium">Aviso Wealth</p>
+              <p className="text-xs text-muted">New Account Administrator</p>
             </div>
-            <span className="text-xs text-muted whitespace-nowrap">earlier</span>
+            <span className="text-xs text-muted whitespace-nowrap">Dec 2020 — Jul 2022</span>
+          </div>
+          <div className="flex justify-between items-baseline gap-4">
+            <div className="flex-1">
+              <p className="text-sm text-ink font-medium">United Nations (UNHCR &amp; UNDP)</p>
+              <p className="text-xs text-muted">
+                Field Associate / Project Officer — humanitarian infrastructure
+                programmes
+              </p>
+            </div>
+            <span className="text-xs text-muted whitespace-nowrap">Jun 2014 — Jan 2019</span>
           </div>
         </div>
+      </section>
+
+      <section className="pb-12 border-t border-line pt-10">
+        <p className="text-sm text-muted leading-relaxed">
+          <span className="text-ink font-medium">Now — </span>
+          TODO(tabeen): one sentence on current work.{" "}
+          <span className="text-xs text-muted">(Last updated Sep 2026)</span>
+        </p>
       </section>
 
       <section className="pb-16 border-t border-line pt-10">
@@ -87,7 +115,7 @@ export default function AboutPage() {
           className="inline-flex items-center gap-1.5 text-sm text-ink px-4 py-2 border border-ink rounded-md hover:bg-surface transition-colors"
         >
           Download resume (PDF)
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="7 10 12 15 17 10" />
             <line x1="12" y1="15" x2="12" y2="3" />

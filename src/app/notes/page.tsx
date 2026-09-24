@@ -3,21 +3,22 @@ import { getAllContent, formatDate } from "@/lib/content";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Writing",
-  description: "Notes and essays on engineering, ML, and adjacent topics.",
+  title: "Notes",
+  description: "Short technical notes on ML, engineering, and applied research.",
+  alternates: { canonical: "https://tabeen.dev/notes" },
 };
 
-// Writing index — list view rather than grid. Posts are typically read
+// Notes index — list view rather than grid. Posts are typically read
 // one at a time, so a clean stack with title + date + description works
 // better than card layout. Closest visual reference: Paul Graham's essay list.
 
-export default function WritingIndexPage() {
-  const posts = getAllContent("writing");
+export default function NotesIndexPage() {
+  const posts = getAllContent("notes");
 
   return (
     <div className="max-w-3xl mx-auto px-6 sm:px-8">
       <section className="py-14">
-        <p className="text-xs text-muted mb-3 uppercase tracking-wider">Writing</p>
+        <p className="text-xs text-muted mb-3 uppercase tracking-wider">Notes</p>
         <h1 className="text-3xl sm:text-4xl text-ink mb-4 max-w-xl">
           Notes and essays.
         </h1>
@@ -36,7 +37,7 @@ export default function WritingIndexPage() {
             {posts.map((post) => (
               <Link
                 key={post.slug}
-                href={`/writing/${post.slug}`}
+                href={`/notes/${post.slug}`}
                 className="py-5 border-b border-line last:border-b-0 group flex justify-between items-baseline gap-6"
               >
                 <div className="flex-1 min-w-0">

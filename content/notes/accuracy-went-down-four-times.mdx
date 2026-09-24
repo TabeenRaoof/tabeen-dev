@@ -1,0 +1,27 @@
+---
+title: "Accuracy went down four times in a row"
+description: "What a falling accuracy number across four iterations actually meant for TruPhoto — and why a portfolio full of only-rising numbers should make you suspicious."
+date: "2026-04-20"
+---
+
+A portfolio full of rising numbers usually means the shortcuts were never found.
+
+That's the uncomfortable lesson from building [TruPhoto](/research/truphoto), a three-class image authenticity classifier. Across the first four iterations, test accuracy went *down* — roughly 84% → 76% → 77.6% → 74.9%. Each drop corresponded to removing one thing that was making the earlier number look better than it should have.
+
+## What was actually happening
+
+The first version scored around 84%. It also had a label-inference bug that was silently dropping 24 of the 25 AI-generator sources in the dataset — the model was effectively being evaluated on a much narrower, easier problem than the one it was supposed to solve. Fixing the label logic dropped accuracy to the mid-70s.
+
+The next problem was sampling: one AI generator ended up supplying roughly 70% of the AI-generated training examples. The classifier wasn't learning "AI-generated" in general — it was partly learning "looks like that one generator." Rebalancing the sampling moved the number again.
+
+The third and most interesting bug was a dataset-identity shortcut. ArtiFact and CASIA 2.0, the two source datasets, have enough incidental differences — compression artifacts, image sizes, metadata quirks — that a classifier can learn to distinguish *which dataset an image came from* and use that as a proxy for real versus forged, without ever learning anything about forgery itself. A cross-source sanity check — deliberately evaluating on combinations the model hadn't seen paired that way in training — is what surfaced this. It's the single check that caught all three of these problems; none of them showed up in a standard held-out test split from the same distribution.
+
+By the time all three were fixed, accuracy was down to about 74.9%, and — critically — that number was finally measuring something real.
+
+## What a falling number means
+
+It's tempting to treat a drop in accuracy as a regression to be reversed. Sometimes it is. But if the drop follows directly from removing a leak, a sampling artifact, or a shortcut the model was exploiting, the falling number is the entire point — it's the model finally being asked the question you actually wanted it to answer.
+
+TruPhoto's fifth iteration did recover some of that lost ground — 2.43 percentage points — but through a genuinely new representation (a frequency-domain feature path), not a new shortcut. That distinction is the thing worth checking for on any project: when a number moves, ask whether it moved because the model got better at the real task, or because it got better at gaming the version of the task you accidentally gave it.
+
+The practical habit this leaves me with: don't just hold out a test split from the same pipeline that generated training data. Build a cross-source or cross-condition check deliberately designed to break dataset-identity shortcuts, and run it before trusting any accuracy number you're proud of.
