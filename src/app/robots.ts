@@ -5,7 +5,13 @@ import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/" },
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      // Internal logo-comparison page — not part of the site, not for
+      // search engines or crawlers to index.
+      disallow: "/_logo-preview",
+    },
     sitemap: "https://tabeen.dev/sitemap.xml",
   };
 }

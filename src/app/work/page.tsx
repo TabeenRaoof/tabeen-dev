@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { getAllContent, formatDate } from "@/lib/content";
+import { getAllContent } from "@/lib/content";
+import { ContentCard } from "@/components/ContentCard";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -38,52 +38,9 @@ export default function WorkIndexPage() {
       ) : (
         <section className="pb-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {items.map((item) => {
-              const isWIP =
-                item.meta.status?.toLowerCase().includes("progress") ||
-                item.meta.status?.toLowerCase() === "wip";
-
-              const accessibleName = [
-                item.meta.title,
-                item.meta.status,
-                item.meta.description,
-              ]
-                .filter(Boolean)
-                .join(". ");
-
-              return (
-                <Link
-                  key={item.slug}
-                  href={`/work/${item.slug}`}
-                  aria-label={accessibleName}
-                  className={`block bg-bg border border-line rounded-lg p-6 hover:border-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 transition-colors group ${
-                    isWIP ? "opacity-60 hover:opacity-100" : ""
-                  }`}
-                >
-                  <div className="flex flex-wrap gap-1.5 mb-2.5" aria-hidden="true">
-                    {item.meta.tags?.[0] && (
-                      <span className="text-[10px] text-muted bg-line px-2 py-0.5 rounded-full">
-                        {item.meta.tags[0]}
-                      </span>
-                    )}
-                    {item.meta.status && (
-                      <span className="text-[10px] text-muted bg-line px-2 py-0.5 rounded-full">
-                        {item.meta.status}
-                      </span>
-                    )}
-                  </div>
-                  <h2 className="font-serif text-lg text-ink mb-1.5 group-hover:text-accent transition-colors">
-                    {item.meta.title}
-                  </h2>
-                  <p className="text-sm text-muted leading-relaxed mb-3">
-                    {item.meta.description}
-                  </p>
-                  <p className="text-[11px] text-muted opacity-70">
-                    {formatDate(item.meta.date)}
-                  </p>
-                </Link>
-              );
-            })}
+            {items.map((item) => (
+              <ContentCard key={item.slug} href={`/work/${item.slug}`} item={item} />
+            ))}
           </div>
         </section>
       )}

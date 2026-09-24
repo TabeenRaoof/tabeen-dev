@@ -34,7 +34,10 @@ export function Header() {
               without touching. */}
           <Link
             href="/"
-            className="flex items-center gap-2.5 hover:opacity-80 transition-opacity shrink-0"
+            // relative + before:-inset-y-3 grows the tap target to ~44px
+            // tall (WCAG 2.5.5) via an invisible pseudo-element, matching
+            // the approach in NavLink — no visual change to the logo row.
+            className="relative before:absolute before:-inset-y-3 before:-inset-x-1 before:content-[''] flex items-center gap-2.5 hover:opacity-80 transition-opacity shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
             aria-label="Tabeen Raoof — home"
           >
             <Logo size={22} />

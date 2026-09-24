@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getFeaturedItem, getAllContent, formatDate } from "@/lib/content";
+import { ContentCard } from "@/components/ContentCard";
 
 // The home page is a server component — content is read at build time
 // from the filesystem, so the page is fully static.
@@ -73,7 +74,7 @@ export default function HomePage() {
         <p className="text-sm text-muted mb-4 tracking-wide">
           Tabeen Raoof — Bay Area
         </p>
-        <h1 className="text-4xl sm:text-5xl text-ink mb-6 max-w-2xl leading-[1.15]">
+        <h1 className="text-4xl sm:text-5xl text-ink mb-6 max-w-2xl">
           Engineer building{" "}
           <em className="text-accent italic font-serif">applied AI systems</em>{" "}
           — and making them work in production.
@@ -87,7 +88,7 @@ export default function HomePage() {
         <div className="flex flex-wrap gap-4">
           <Link
             href="/work"
-            className="inline-flex items-center gap-1.5 text-sm text-ink px-4 py-2.5 border border-ink rounded-md hover:bg-surface transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm text-ink px-4 py-3 border border-ink rounded-md hover:bg-surface transition-colors"
           >
             See my work
             <svg
@@ -106,7 +107,7 @@ export default function HomePage() {
           </Link>
           <Link
             href="/research"
-            className="inline-flex items-center gap-1.5 text-sm text-muted px-4 py-2.5 hover:text-ink transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm text-muted px-4 py-3 hover:text-ink transition-colors"
           >
             Research
           </Link>
@@ -136,38 +137,16 @@ export default function HomePage() {
             <h2 className="font-serif text-xl text-ink">Featured</h2>
             <Link
               href={`/${featuredCategory}`}
-              className="text-xs text-muted hover:text-ink transition-colors"
+              className="relative before:absolute before:-inset-3 before:content-[''] text-xs text-muted hover:text-ink transition-colors"
             >
               {featuredCategory === "work" ? "All work" : "All research"} →
             </Link>
           </div>
 
-          <Link
+          <ContentCard
             href={`/${featuredCategory}/${featured.slug}`}
-            className="block bg-surface border border-line rounded-lg p-7 hover:border-accent transition-colors group"
-          >
-            <div className="flex flex-wrap gap-2 mb-3">
-              {featured.meta.tags?.slice(0, 2).map((tag) => (
-                <span
-                  key={tag}
-                  className="text-[11px] text-accent bg-accent-soft px-2.5 py-0.5 rounded-full"
-                >
-                  {tag}
-                </span>
-              ))}
-              {featured.meta.status && (
-                <span className="text-[11px] text-accent-2 bg-accent-2-soft px-2.5 py-0.5 rounded-full">
-                  {featured.meta.status}
-                </span>
-              )}
-            </div>
-            <h3 className="font-serif text-2xl text-ink mb-2 group-hover:text-accent transition-colors">
-              {featured.meta.title}
-            </h3>
-            <p className="text-sm text-muted leading-relaxed">
-              {featured.meta.description}
-            </p>
-          </Link>
+            item={featured}
+          />
         </section>
       )}
 
@@ -180,7 +159,7 @@ export default function HomePage() {
             <h2 className="font-serif text-xl text-ink">Recent notes</h2>
             <Link
               href="/notes"
-              className="text-xs text-muted hover:text-ink transition-colors"
+              className="relative before:absolute before:-inset-3 before:content-[''] text-xs text-muted hover:text-ink transition-colors"
             >
               All notes →
             </Link>
@@ -191,7 +170,7 @@ export default function HomePage() {
               <Link
                 key={post.slug}
                 href={`/notes/${post.slug}`}
-                className="py-4 border-b border-line last:border-b-0 group flex justify-between items-baseline gap-4"
+                className="py-4 border-b border-line last:border-b-0 group flex justify-between items-baseline gap-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
               >
                 <div className="flex-1 min-w-0">
                   <h3 className="font-serif text-lg text-ink group-hover:text-accent transition-colors mb-1">
