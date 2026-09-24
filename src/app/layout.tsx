@@ -29,7 +29,7 @@ const jetbrainsMono = JetBrains_Mono({
 // Site-wide metadata. Per-page pages can override individual fields.
 // metadataBase is what Next uses to resolve relative OG image URLs.
 const SITE_DESCRIPTION =
-  "Applied AI/ML engineer in the Bay Area. Computer-vision research, backend services, and enterprise delivery experience.";
+  "Applied AI/ML engineer in the Bay Area. Production data pipelines and monitoring on GCP, computer-vision research, and enterprise delivery experience.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tabeen.dev"),

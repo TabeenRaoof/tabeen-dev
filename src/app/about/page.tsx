@@ -51,7 +51,7 @@ export default function AboutPage() {
           <div className="flex justify-between items-baseline gap-4">
             <div className="flex-1">
               <p className="text-sm text-ink font-medium">Xylo AI Studios</p>
-              <p className="text-xs text-muted">Forward Deployed / Backend AI Engineer</p>
+              <p className="text-xs text-muted">Forward Deployed / Backend Engineer Intern</p>
             </div>
             <span className="text-xs text-muted whitespace-nowrap">Jun 2026 — present</span>
           </div>

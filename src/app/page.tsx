@@ -12,7 +12,7 @@ import { getFeaturedItem, getAllContent, formatDate } from "@/lib/content";
 //   4. Recent notes — last 3 posts (only shown if any exist)
 
 const DESCRIPTION =
-  "Applied AI/ML engineer in the Bay Area. Computer-vision research, backend services, and enterprise delivery experience.";
+  "Applied AI/ML engineer in the Bay Area. Production data pipelines and monitoring on GCP, computer-vision research, and enterprise delivery experience.";
 
 export const metadata: Metadata = {
   title: "Tabeen Raoof — Applied AI/ML Engineer",
@@ -79,9 +79,10 @@ export default function HomePage() {
           — and making them work in production.
         </h1>
         <p className="text-base text-muted leading-relaxed max-w-xl mb-8">
-          MS Computer Science (AI/ML) at SFBU, graduating December 2026.
-          Computer-vision research, backend services, and three years of
-          enterprise delivery before that.
+          MS Computer Science (AI/ML) at SFBU, graduating December 2026. I
+          build data pipelines and monitoring in production, computer-vision
+          research systems, and — before all that — spent three years
+          delivering enterprise software to customers.
         </p>
         <div className="flex flex-wrap gap-4">
           <Link
@@ -115,13 +116,13 @@ export default function HomePage() {
       {/* ----------------------------------------------------------------- */}
       {/* Now — one sentence on current focus, with a visible last-updated  */}
       {/* date so it doesn't quietly go stale.                              */}
-      {/* TODO(tabeen): replace with the actual current-work sentence and   */}
-      {/* keep the date current.                                            */}
       {/* ----------------------------------------------------------------- */}
       <section className="pb-12 border-t border-line pt-8">
         <p className="text-sm text-muted leading-relaxed">
           <span className="text-ink font-medium">Now — </span>
-          TODO(tabeen): one sentence on current work.{" "}
+          Building API integrations and AI agent workflows in Python at
+          Xylo AI Studios, running production features end-to-end through
+          a specification-first, agent-assisted development process.{" "}
           <span className="text-xs text-muted">(Last updated Sep 2026)</span>
         </p>
       </section>

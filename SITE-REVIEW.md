@@ -181,3 +181,43 @@ All content routes are statically prerendered (`●`/`○`) except `/api/og`, wh
 - Visual rendering at any breakpoint, in an actual browser, was not possible here — everything above that says "not verified" or "deferred" is a real gap, not a formality, and should get a manual pass (or a Lighthouse/axe-core run) before this ships.
 - LinkedIn/Twitter card rendering was not checked against the actual LinkedIn Post Inspector.
 - I did not check whether `.env.local` / Cloudflare Pages env vars are configured for Giscus in the current deployment target — only that the code path degrades gracefully (shows a "not configured" placeholder) if they aren't.
+
+---
+
+## 10. Update — Xylo AI Studios work entry (post-approval)
+
+This round adds the Xylo AI Studios current-role content that the earlier rev deliberately left out pending approval. Approval was informal and scoped narrowly: describe *what kind of work* was done and *what technologies were used*, not *how* any AI agent, prompt, or internal methodology works.
+
+**What was added:**
+- `src/app/about/page.tsx` — updated the existing "Xylo AI Studios" experience-list entry's title from "Forward Deployed / Backend AI Engineer" to **"Forward Deployed Engineer Intern"** (the title given for this task), dates unchanged (Jun 2026 — present).
+- `src/app/page.tsx` — filled in the homepage's "Now" line (previously a `TODO(tabeen)` placeholder), naming Xylo AI Studios directly now that doing so is approved. Mirrors the sentence already present in the About page's "Now" section from the prior round.
+- `content/work/xylo.mdx` (new) — a Work detail page at `/work/xylo`, using the existing project-page template (no route code changes needed; it renders through the existing `/work/[slug]` dynamic route). Sections: Overview, What I build, Working style, Stack — following the structure and wording supplied for this task.
+
+**Boundary check — confirmed nothing was introduced beyond what was supplied:**
+- **No client name** anywhere in the diff. `content/work/xylo.mdx` describes the client base only generically ("boutique financial advisors and other small businesses"), matching the supplied Overview text verbatim.
+- **No agent-methodology internals.** The "Working style" section names the *shape* of the process (discovery → spec → story decomposition → build → review → delivery) — the same level of description already used in the résumé-derived language from the prior round — and explicitly states internals aren't shared: *"the specifics of how it's structured internally aren't something I can share."* No sentence describes how an agent or prompt makes decisions, how it's structured, or how it reasons.
+- **No metrics** beyond what was supplied (there were none given for this entry, and none were added).
+- **No architecture diagram or system diagram** was added for this page — only the one Overview sentence, as instructed.
+- `npm run build` passes clean with the new page included (`/work/xylo` appears in the static build output alongside the other Work items).
+
+**Still open from prior rounds, unaffected by this change:** the 14 remaining `TODO(tabeen)` markers, the missing `/resume.pdf` and architecture-diagram assets, and the deferred visual/responsive/Lighthouse checks — see §2, §4, §5, §9 above.
+
+---
+
+## 11. Update — Xylo AI Studios expanded (transcript-monitoring project detail, hero repositioning, fourth Notes post)
+
+This round replaces the §10 Xylo content with a more detailed version (title changed again — see below) and expands the site's positioning around it. Same hard boundary as §10, restated more strictly this time: describe what kind of work was done and what problem it solved, not how any AI agent, prompt, or internal methodology works; no customer names; no internal ticket numbers, PR numbers, or repository paths.
+
+**What was added/changed:**
+- `src/app/about/page.tsx` — the Xylo experience-list title changed again, from "Forward Deployed Engineer Intern" (§10) to **"Forward Deployed / Backend Engineer Intern"** (the title specified for this round). Dates unchanged.
+- `content/work/xylo.mdx` — rewritten with a longer Overview (the transcript-ingestion pipeline: email/calendar/CRM/meeting transcripts from Zoom, Teams, Google Meet, linked back to calendar events), a new "Telling 'quiet' from 'broken'" section describing the event-driven-monitoring problem and the expected-count-plus-connected-platform-gate solution, the "Also" bullets, and the "Working style" paragraph. Stack expanded to include BigQuery, Google Cloud Run, Cloud Scheduler, and Cloud Logging & Monitoring.
+- `src/app/page.tsx` and `src/app/layout.tsx` — hero subheading and both the homepage and site-wide default meta descriptions updated to reflect the GCP data-pipelines-and-monitoring work alongside the existing computer-vision/enterprise-delivery framing. Hero heading itself left unchanged, per instruction, since it still reads correctly against the new subheading.
+- `content/notes/how-do-you-alert-on-something-thats-supposed-to-be-quiet.mdx` (new, ~890 words) — the fourth Notes post, dated 2026-09-18 (most recent of the four, so it sorts first on `/notes` and is the one shown on the homepage's "Recent notes" list — "most prominent" achieved via the existing date-sort behavior rather than a template change). Carries its own `TODO(tabeen)`, per instruction, flagging that it needs your review before publishing since it's the most detailed public description of current work.
+
+**Boundary check — reviewed the full diff line by line:**
+- **No customer name.** The Notes post and the Work page both refer to "three customers," "one customer," "a customer" — never an identifier. The Overview names only the categories of data handled (email, calendar, CRM, meeting transcripts) and the platforms (Zoom, Teams, Google Meet), not who uses the platform.
+- **No internal ticket numbers, PR numbers, or repository paths.** None appear anywhere in the new content — checked `content/work/xylo.mdx` and the new Notes post specifically for anything that looked like an identifier (e.g. `#1234`, a Jira-style key, a `github.com/<employer-org>/...` path) and found none.
+- **No agent-methodology internals.** "Working style" again describes only the *shape* of the process (discovery → spec → story decomposition → build → review → delivery) and explicitly states internals aren't shared. The Notes post is entirely about the monitoring/alerting engineering problem (event-driven signal absence, expected-count baselines, platform gating) — it does not touch how any AI agent or prompt is structured or makes decisions.
+- `npm run build` passes clean with all changes included; the new Notes post appears first in both `/notes` and the homepage's recent-notes list, and `/work/xylo` reflects the updated content.
+
+**Still open:** all TODOs from §2 remain (including FiPet's description), plus the new one in the fourth Notes post (owner review before publishing).

@@ -1,0 +1,40 @@
+---
+title: "Xylo AI Studios"
+description: "Forward Deployed / Backend Engineer Intern · June 2026 – Present. Own the ingestion and data-extraction service layer for a communications pipeline serving financial-advisory firms."
+date: "2026-06-01"
+tags: ["Internship"]
+stack: ["Python", "FastAPI", "PostgreSQL", "SQLAlchemy", "Alembic", "BigQuery", "Google Cloud Run", "Cloud Scheduler", "Cloud Logging & Monitoring", "REST APIs", "CI/CD"]
+status: "Active"
+---
+
+*Forward Deployed / Backend Engineer Intern · June 2026 – Present*
+
+## Overview
+
+Xylo is a platform for financial-advisory firms that ingests their communications — email, calendar, CRM records, and meeting transcripts — into a single searchable pipeline. Part of that pipeline pulls meeting transcripts from Zoom, Microsoft Teams and Google Meet and links them back to the calendar events they belong to, so an advisor can search what was actually said in a meeting six months ago. I own the ingestion and data-extraction service layer.
+
+## Telling "quiet" from "broken"
+
+Three customers silently lost transcript capture for weeks before anyone noticed. A folder moved, a setting flipped, and nothing was watching. The existing alerting could only say that transcripts weren't flowing — never which meetings were missing — so every alert turned into a manual call to the customer to work out what had happened.
+
+The underlying difficulty is that transcript capture is event-driven. A quiet week is genuinely normal: advisors take holidays, calendars empty out. An earlier monitoring effort had excluded transcripts entirely for exactly this reason, because it had no way to distinguish a quiet week from a broken integration.
+
+The fix was to stop asking "did anything arrive?" and start asking "did what we expected arrive?" A BigQuery view derives an expected meeting count from calendar events, so a gap becomes concrete — nine of twelve meetings captured, rather than an unquantified silence. A connected-platform gate excludes platforms a customer never actually linked, so meetings on a calendar for an account that was never connected don't register as failures. A classifier then reads the view, applies the gate, and decides per customer and platform whether coverage is healthy, degraded against its own baseline, or stalled outright. It runs as a scheduled Cloud Run job with log-based metrics and alert policies.
+
+While I was building it, the diagnostic found a real outage nobody knew about: one customer's Meet transcripts had stopped landing two weeks earlier and nothing had flagged it. Closing that needed a view correction so a just-arrived transcript wasn't miscounted as stale, plus a classifier change to let that failure mode through the gate without opening the door to false alarms elsewhere.
+
+The pipeline is live in dev and verified against real production log output rather than only tests. The alert policy itself stays disabled until we've watched roughly a week of real runs and confirmed the thresholds behave, before it pages anyone.
+
+## Also
+
+- Python/FastAPI REST endpoints and reversible PostgreSQL migrations (SQLAlchemy/Alembic), each with unit and integration tests and independent code review.
+- Contributed to a platform re-architecture clarifying how customer accounts, credentials and integration sources relate, reducing ambiguity in how new integrations are onboarded.
+- Every change validated through CI/CD to a green deployment before it ships.
+
+## Working style
+
+Xylo builds software together with AI coding agents under a specification-first process — discovery, spec, story decomposition, build, review, delivery. I work inside that process daily. The internal specifics aren't mine to share, but the discipline of writing a clear spec before either a human or an agent starts building is the most transferable thing I've taken from it.
+
+## Stack
+
+Python, FastAPI, PostgreSQL, SQLAlchemy, Alembic, BigQuery, Google Cloud Run, Cloud Scheduler, Cloud Logging & Monitoring, REST APIs, CI/CD

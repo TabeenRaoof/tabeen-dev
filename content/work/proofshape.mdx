@@ -3,23 +3,29 @@ title: "ProofShape"
 description: "Phone-based coarse 3D inspection for manufactured parts, comparing a supplier's photographed part against the buyer's CAD file."
 date: "2026-09-01"
 tags: ["Computer vision", "3D reconstruction"]
-stack: ["Python", "PyTorch", "Next.js", "TypeScript", "3D reconstruction", "generative completion", "OpenCV"]
+stack: ["Python", "PyTorch", "Next.js", "TypeScript", "OpenAPI 3.1", "3D reconstruction", "generative completion", "OpenCV"]
 github: "https://github.com/proofshape/proofshape"
 status: "In progress"
 ---
 
 ## Overview
 
-CS595 capstone, started September 2026. **This is in progress — no milestones below should be read as completed.**
+CS595 capstone, started September 2026, three-person team. **This is in progress — the project overall is not complete, though the milestones below are.**
 
 A supplier photographs a part on a printed reference sheet, guided by on-screen instructions. The system reconstructs a metric 3D model from the photos and compares it against the buyer's CAD file, returning a Pass / Fail / Rescan / Unverifiable report with a deviation heatmap.
 
 The report also includes a provenance mask that separates the surface actually measured from the camera from surface that was AI-completed to fill gaps the photos didn't cover — a Stereon-adjacent idea (see [Stereon](/research/stereon)) applied here to distinguishing observed geometry from inferred geometry, not to authenticity detection.
 
+## Milestones
+
+- Authored and froze a versioned OpenAPI 3.1 contract decoupling the capture and reconstruction services, with per-endpoint fixtures and schema-validation tests — including a structural regression test enforcing the system's core safety invariant, that unobserved regions can never contribute to a Pass verdict.
+- Collected and validated the golden-capture benchmark dataset: five multi-view sets (~140 phone photos) of rigid parts on a ChArUco board across lighting conditions, with caliper-derived CAD ground truth.
+- Established the team's engineering baseline — enforced branch protection, required CI (lint and type checks), one-PR-per-story review workflow — and reviewed teammates' pull requests, catching data-integrity and cross-platform defects before merge.
+
 ## Status
 
-In progress, started September 2026. TODO(tabeen): add milestones here as they're actually reached — do not claim progress ahead of what's been built.
+In progress, started September 2026.
 
 ## Stack
 
-Python, PyTorch, Next.js, TypeScript, 3D reconstruction, generative completion, OpenCV
+Python, PyTorch, Next.js, TypeScript, OpenAPI 3.1, 3D reconstruction, generative completion, OpenCV
