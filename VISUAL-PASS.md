@@ -78,7 +78,7 @@ Topic-badge text and status-badge text differ by ~0.42 in luminance — a large,
 
 **Cards/lists that don't fit this shape, and why (as requested — reporting rather than forcing them into it):**
 - **Notes index (`/notes`) and the homepage's Recent Notes list.** These are a title/description/date list, not a badge card — no status, no topic tag, by original design (list view "closer to Paul Graham's essay list," per the existing code comment). Forcing badges onto them would be inventing content that isn't there. Left as-is; only added a focus-visible ring for consistency with everything else.
-- **`/_logo-preview`** isn't content-driven at all (no frontmatter), so it's outside this system entirely by nature.
+- **`/logo-preview-internal`** isn't content-driven at all (no frontmatter), so it's outside this system entirely by nature.
 
 **One-off text sizes eliminated:** every `text-[10px]` and `text-[11px]` in `work/page.tsx`, `research/page.tsx`, `work/[slug]/page.tsx`, `research/[slug]/page.tsx`, and `page.tsx` — replaced by `text-2xs` (via the `Badge`/`ContentCard` components, or directly for non-badge captions like "Try it" and the Stack pills, which used the same undocumented 11px value).
 
@@ -90,18 +90,17 @@ Topic-badge text and status-badge text differ by ~0.42 in luminance — a large,
 
 ## 5. The logo comparison
 
-**Where to view it:** `/_logo-preview` (route folder is literally named `%5Flogo-preview` — Next.js's App Router treats a plain `_`-prefixed folder as a private, unrouted folder, so the `%5F`-escaped name was required to actually get a working `/_logo-preview` URL rather than a 404).
+**Where to view it:** `/logo-preview-internal`. The brief asked for the literal path `/_logo-preview`; that was tried first, using the `%5F`-escaped folder name Next.js requires to route a `_`-prefixed segment at all (a plain `_` prefix makes App Router treat the folder as private and unrouted). It built cleanly under both `next build` and a direct `npx @cloudflare/next-on-pages` run — the route showed up correctly in both. It still 404'd on the actual live Cloudflare Pages deployment after merging and pushing, with no cache-hit header on the 404 (so not a stale-cache artifact — the deployed worker itself was rejecting the path). Rather than keep guessing at Cloudflare's edge-routing internals from outside, the route was renamed to avoid a leading underscore entirely, redeployed, and reverified live. Kept out of search via `robots.ts` (`disallow: "/logo-preview-internal"`) and `metadata.robots = { index: false, follow: false }` on the page itself, same as before — it was never in `sitemap.ts`.
 
 - Shows the current 3×3 dot-grid mark and the proposed alternative side by side, at 16px, 32px, 64px, and header size (22px, inline with the wordmark).
 - Two backdrop panels: the site's actual dark background, and a light background as a context check (tabeen.dev has no light theme, so this is a background swap to sanity-check the mark against a light context like a browser tab bar — not a themed re-render; the page says so explicitly).
-- `robots.ts` now disallows `/_logo-preview`; it was never in `sitemap.ts` to begin with.
 - `metadata.robots = { index: false, follow: false }` on the page itself, as a second layer.
 
 **The alternative (`LogoAlt` in `Logo.tsx`):** a single horizontal row of seven dots, radius tapering from largest near the leading (left) edge down to smallest at the trailing edge, spacing deliberately uneven (not a repeating unit) — closer to the source photograph's actual row of variously-sized, unevenly-spaced spots than the current square lattice. Rendered monochrome (`fill-ink`) rather than the current mark's two-tone cream/chartreuse, since the brief specifically flagged the chartreuse dots as reading too close to "yellow" to work as an accent, and it sits near the heading cream in hue besides.
 
 **The current default logo is unchanged.** `Logo()` still renders the existing 3×3 mark by default; `LogoAlt` only appears via `NEXT_PUBLIC_LOGO_VARIANT=alt` (documented in `.env.local.example`) or on the preview page. **The choice is the owner's** — this pass makes no recommendation between them.
 
-**Favicon note (found during this task, not fixed):** there is no favicon at all in the project — no `favicon.ico`, no `icon.tsx`/`icon.png` under `src/app/`. This predates this pass. Since a favicon should probably be generated from whichever mark gets chosen at `/_logo-preview`, it wasn't added now to avoid producing one from the mark that might get rejected. Flagged for a follow-up once the logo decision is made.
+**Favicon note (found during this task, not fixed):** there is no favicon at all in the project — no `favicon.ico`, no `icon.tsx`/`icon.png` under `src/app/`. This predates this pass. Since a favicon should probably be generated from whichever mark gets chosen at `/logo-preview-internal`, it wasn't added now to avoid producing one from the mark that might get rejected. Flagged for a follow-up once the logo decision is made.
 
 ---
 
@@ -136,4 +135,4 @@ Topic-badge text and status-badge text differ by ~0.42 in luminance — a large,
 
 - **200% zoom** and **375/768/1024/1440 responsive rendering** — reasoned from code, not confirmed in an actual browser (none available in this environment). This is the most important gap in this report: everything above in those two categories is inference, not observation.
 - **Actual keyboard-only tap/click testing of the new touch-target and focus changes** — the CSS was verified to compile and the box-model math was computed by hand, but nothing was physically tapped on a touch device.
-- ~~Whether the `/_logo-preview` route's `%5F`-folder-name approach survives the Cloudflare Pages / `next-on-pages` build step~~ — checked: ran `npx @cloudflare/next-on-pages` directly, and `/_logo-preview` (plus `/_logo-preview.rsc`) appears correctly in its prerendered-routes output alongside everything else. Not a gap after all.
+- **A real gap this report almost missed:** the original `%5Flogo-preview`-folder approach (serving `/_logo-preview` literally) passed `next build` and passed a direct `npx @cloudflare/next-on-pages` run — both looked clean — but 404'd on the actual live Cloudflare Pages deployment. Local and CLI build success did not predict production platform behavior for a leading-underscore path. Caught by checking the live URL after merge rather than trusting the build output, and fixed by renaming to `/logo-preview-internal`. Worth remembering next time a route needs an unusual path on this host: build success isn't proof of servability.

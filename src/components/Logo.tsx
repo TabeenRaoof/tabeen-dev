@@ -29,7 +29,7 @@ interface LogoProps {
 // rather than a repeating grid unit. Monochrome (fill-ink) rather than the
 // two-tone original — a second color read as "yellow" sitting close to the
 // heading cream, weakening its use as an accent. Compare both at
-// /_logo-preview. This does not replace the default mark; enable via
+// /logo-preview-internal. This does not replace the default mark; enable via
 // NEXT_PUBLIC_LOGO_VARIANT=alt for a live preview in the header itself.
 export function LogoAlt({ size = 22, className }: LogoProps) {
   const h = size;

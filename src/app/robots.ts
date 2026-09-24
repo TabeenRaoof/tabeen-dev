@@ -10,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       // Internal logo-comparison page — not part of the site, not for
       // search engines or crawlers to index.
-      disallow: "/_logo-preview",
+      disallow: "/logo-preview-internal",
     },
     sitemap: "https://tabeen.dev/sitemap.xml",
   };
