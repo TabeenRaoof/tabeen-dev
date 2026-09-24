@@ -116,7 +116,7 @@ export default function AboutPage() {
         <a
           href="/resume.pdf"
           download
-          className="inline-flex items-center gap-1.5 text-sm text-ink px-4 py-2 border border-ink rounded-md hover:bg-surface transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm text-ink px-4 py-3 border border-ink rounded-md hover:bg-surface transition-colors"
         >
           Download resume (PDF)
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

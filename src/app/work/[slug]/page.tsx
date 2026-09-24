@@ -9,6 +9,7 @@ import {
   getContentBySlug,
   formatDate,
 } from "@/lib/content";
+import { Badge } from "@/components/Badge";
 import type { Metadata } from "next";
 
 // Work item detail page — pulls from /content/work/.
@@ -74,29 +75,28 @@ export default async function WorkDetailPage({ params }: PageProps) {
             <line x1="19" y1="12" x2="5" y2="12" />
             <polyline points="12 19 5 12 12 5" />
           </svg>
-          Projects
+          Work
         </Link>
 
         <div className="flex flex-wrap gap-1.5 mb-3.5">
+          {meta.status && <Badge variant="status">{meta.status}</Badge>}
           {meta.tags?.map((tag) => (
-            <span key={tag} className="text-[11px] text-muted bg-line px-2.5 py-0.5 rounded-full">
+            <Badge key={tag} variant="topic">
               {tag}
-            </span>
+            </Badge>
           ))}
-          {meta.status && (
-            <span className="text-[11px] text-muted bg-line px-2.5 py-0.5 rounded-full">
-              {meta.status}
-            </span>
-          )}
         </div>
 
-        <h1 className="text-3xl sm:text-4xl text-ink mb-3">{meta.title}</h1>
+        <h1 className="text-3xl sm:text-4xl text-ink mb-2">{meta.title}</h1>
+        {meta.subtitle && (
+          <p className="text-sm text-muted mb-3">{meta.subtitle}</p>
+        )}
         <p className="text-base text-muted leading-relaxed mb-5">{meta.description}</p>
         <p className="text-xs text-muted mb-5">{formatDate(meta.date)}</p>
 
         <div className="flex flex-wrap gap-3 text-xs">
           {meta.github && (
-            <a href={meta.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-ink px-3 py-1.5 border border-ink rounded-md hover:bg-surface transition-colors">
+            <a href={meta.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-ink px-3 py-3.5 border border-ink rounded-md hover:bg-surface transition-colors">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
               </svg>
@@ -104,7 +104,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
             </a>
           )}
           {meta.demo && (
-            <a href={meta.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-ink px-3 py-1.5 border border-ink rounded-md hover:bg-surface transition-colors">
+            <a href={meta.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-ink px-3 py-3.5 border border-ink rounded-md hover:bg-surface transition-colors">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                 <polyline points="15 3 21 3 21 9" />
@@ -118,7 +118,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
 
       {meta.demo && (
         <section className="pb-8">
-          <p className="text-[11px] text-muted mb-2.5 uppercase tracking-wider">
+          <p className="text-2xs text-muted mb-2.5 uppercase tracking-wider">
             {meta.demoLabel ?? "Try it"}
           </p>
           {/* Breakout container — extends beyond the article's max-w-2xl on
@@ -192,7 +192,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
           <h2 className="font-serif text-2xl text-ink mb-3.5">Stack</h2>
           <div className="flex flex-wrap gap-1.5">
             {meta.stack.map((tech) => (
-              <span key={tech} className="text-[11px] text-ink bg-surface border border-line px-2.5 py-1 rounded-md">
+              <span key={tech} className="text-2xs text-ink bg-surface border border-line px-2.5 py-1 rounded-md">
                 {tech}
               </span>
             ))}

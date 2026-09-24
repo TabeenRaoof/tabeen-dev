@@ -21,14 +21,19 @@ export const runtime = "edge";
 // Standard Open Graph dimensions — 1200x630 is the LinkedIn/Twitter spec
 const SIZE = { width: 1200, height: 630 };
 
-// Color tokens — kept in sync with globals.css.
-// Hard-coded here because edge runtime can't read CSS variables.
+// Color tokens — must be kept in sync with globals.css by hand.
+// This is a deliberate, documented exception to "work through tokens, not
+// one-off values": next/og's ImageResponse renders via Satori, which has no
+// CSS custom-property support, so `var(--color-accent)` etc. cannot resolve
+// here the way it does in Tailwind-rendered components. If globals.css
+// changes a color used below, update this object in the same commit — as
+// happened when --color-accent moved from #D8602A to #D9632E for contrast.
 const COLORS = {
   bg: "#1A1614",
   surface: "#2C2622",
   ink: "#F5F2E8",
   muted: "#A69F91",
-  accent: "#D8602A",
+  accent: "#D9632E",
   chartreuse: "#D4DC3F",
 };
 

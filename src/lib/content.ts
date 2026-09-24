@@ -27,7 +27,12 @@ import matter from "gray-matter";
 export interface ContentMeta {
   /** Display title — required */
   title: string;
-  /** One-sentence summary used on index pages and OG cards */
+  /** Optional role/byline line — its own slot between title and description
+   *  (e.g. "Forward Deployed Engineer Intern" or a paper's author line).
+   *  Keeps role/date text out of `description`, which is prose only. */
+  subtitle?: string;
+  /** One-sentence summary used on index pages and OG cards. Prose only —
+   *  no role or date; those belong in `subtitle` and `date`. */
   description: string;
   /** ISO date string (YYYY-MM-DD) — used for sorting and display */
   date: string;
