@@ -48,9 +48,13 @@ export default function AboutPage() {
       <section className="pb-12 border-t border-line pt-10">
         <h2 className="font-serif text-2xl text-ink mb-6">Experience</h2>
         <div className="flex flex-col gap-5">
-          {/* TODO(tabeen): add current role once approved (Xylo AI Studios
-              page/mentions are pending approval and are intentionally left
-              out of this restructure). */}
+          <div className="flex justify-between items-baseline gap-4">
+            <div className="flex-1">
+              <p className="text-sm text-ink font-medium">Xylo AI Studios</p>
+              <p className="text-xs text-muted">Forward Deployed / Backend AI Engineer</p>
+            </div>
+            <span className="text-xs text-muted whitespace-nowrap">Jun 2026 — present</span>
+          </div>
           <div className="flex justify-between items-baseline gap-4">
             <div className="flex-1">
               <p className="text-sm text-ink font-medium">FiPet</p>
@@ -63,10 +67,7 @@ export default function AboutPage() {
               <p className="text-sm text-ink font-medium">SFBU</p>
               <p className="text-xs text-muted">MS Computer Science (AI/ML)</p>
             </div>
-            <span className="text-xs text-muted whitespace-nowrap">
-              {/* TODO(tabeen): confirm program start date */}
-              TODO(tabeen): start date — Dec 2026
-            </span>
+            <span className="text-xs text-muted whitespace-nowrap">Aug 2025 — Dec 2026</span>
           </div>
           <div className="flex justify-between items-baseline gap-4">
             <div className="flex-1">
@@ -98,7 +99,10 @@ export default function AboutPage() {
       <section className="pb-12 border-t border-line pt-10">
         <p className="text-sm text-muted leading-relaxed">
           <span className="text-ink font-medium">Now — </span>
-          TODO(tabeen): one sentence on current work.{" "}
+          Building API integrations and AI agent workflows in Python at an
+          early-stage AI studio (Xylo AI Studios), running production
+          features end-to-end through a specification-first,
+          agent-assisted development process.{" "}
           <span className="text-xs text-muted">(Last updated Sep 2026)</span>
         </p>
       </section>
