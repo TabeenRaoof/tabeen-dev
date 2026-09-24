@@ -1,0 +1,25 @@
+---
+title: "ProofShape"
+description: "Phone-based coarse 3D inspection for manufactured parts, comparing a supplier's photographed part against the buyer's CAD file."
+date: "2026-09-01"
+tags: ["Computer vision", "3D reconstruction"]
+stack: ["Python", "PyTorch", "Next.js", "TypeScript", "3D reconstruction", "generative completion", "OpenCV"]
+github: "https://github.com/proofshape/proofshape"
+status: "In progress"
+---
+
+## Overview
+
+CS595 capstone, started September 2026. **This is in progress — no milestones below should be read as completed.**
+
+A supplier photographs a part on a printed reference sheet, guided by on-screen instructions. The system reconstructs a metric 3D model from the photos and compares it against the buyer's CAD file, returning a Pass / Fail / Rescan / Unverifiable report with a deviation heatmap.
+
+The report also includes a provenance mask that separates the surface actually measured from the camera from surface that was AI-completed to fill gaps the photos didn't cover — a Stereon-adjacent idea (see [Stereon](/research/stereon)) applied here to distinguishing observed geometry from inferred geometry, not to authenticity detection.
+
+## Status
+
+In progress, started September 2026. TODO(tabeen): add milestones here as they're actually reached — do not claim progress ahead of what's been built.
+
+## Stack
+
+Python, PyTorch, Next.js, TypeScript, 3D reconstruction, generative completion, OpenCV

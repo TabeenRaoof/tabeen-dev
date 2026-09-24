@@ -1,0 +1,41 @@
+---
+title: "VLM Relational Reasoning Across a Compute Spectrum"
+description: "A pre-registered evaluation of relational and spatial reasoning in vision-language models across a compute spectrum, from cloud API down to an 8GB NVIDIA Jetson edge device."
+date: "2026-06-01"
+tags: ["Vision-language models"]
+# TODO(tabeen): confirm stack — Python, PyTorch, Jetson, Ollama?
+stack: ["Python", "PyTorch", "Jetson"]
+research:
+  summary: "Preprint in preparation. TODO(tabeen): arXiv link."
+status: "In progress"
+---
+
+## What the study asks
+
+Vision-language models are increasingly evaluated on benchmark leaderboards run against large cloud-hosted checkpoints. This study asks a narrower, more practical question: how does relational and spatial reasoning performance hold up as you move the same class of model down a compute spectrum — from a cloud API, to a local workstation GPU, to an 8GB NVIDIA Jetson edge device? That question matters for anyone deciding whether a VLM-based reasoning task can actually run at the edge rather than only in a demo.
+
+**Publication status:** Preprint in preparation. TODO(tabeen): arXiv link.
+
+## The engineering
+
+Most of the work in this project was building an evaluation harness that could run unattended for days at a time, not the modeling itself.
+
+- **Evaluation harness and monitoring** built specifically for unattended, multi-day data collection — the harness needed to detect and recover from failures without a person watching it.
+- **2,000-item balanced evaluation set**, collected with a paired design so the same items are evaluated across every point on the compute spectrum.
+- **Hypotheses and analysis plan frozen in version control before data collection began** — a pre-registration discipline applied to an engineering evaluation, not just the usual academic context.
+- **Edge-deployment debugging over SSH on a headless device**, including:
+  - Diagnosing kernel out-of-memory kills from system logs alone, with no display attached.
+  - Isolating GPU memory failures to specific inputs rather than treating them as random crashes.
+  - Relocating model storage after running into a full disk mid-run.
+  - Building a clean resume path so an interrupted run could pick back up without re-collecting completed items.
+- The harness **survived two unplanned power losses without losing collected data** — a direct result of the resume-on-interruption design above.
+
+## Methodology, at a high level
+
+The evaluation compares the same family of vision-language model across three deployment points on the compute spectrum — a cloud API, a local GPU workstation, and an 8GB Jetson edge device — on a shared, balanced 2,000-item relational and spatial reasoning set, using a paired collection design so every item is evaluated under the same conditions at each compute tier.
+
+No results, accuracy figures, comparison tables, or conclusions are published here while the preprint is in preparation.
+
+## Repository
+
+The repository is private until the preprint posts.

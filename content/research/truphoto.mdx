@@ -1,0 +1,79 @@
+---
+title: "TruPhoto — Three-Class Image Authenticity Classification"
+description: "Three-class image authenticity classifier (Real / Forged / AI-Generated) combining a frozen MobileNetV2 backbone with frequency-domain features, classified by an RBF-kernel SVM."
+date: "2026-04-15"
+tags: ["Computer vision"]
+stack: ["Python", "PyTorch", "timm", "MobileNetV2", "scikit-learn", "scipy", "numpy", "Pillow", "Gradio"]
+github: "https://github.com/TabeenRaoof/xception-photo-verification"
+# No live-demo URL is given in the source facts for this rewrite, and the
+# previous frontmatter's HF Space URL (huggingface.co/spaces/tabeen/...)
+# returns 401 (private/gated), not a working public demo. Per Task 6, the
+# "Live demo" button is omitted rather than left pointing at a dead link.
+# TODO(tabeen): if you have a live public HF Space for TruPhoto, add
+# `demo: "<url>"` back here.
+# `diagram` intentionally omitted: /diagrams/architecture.png does not exist
+# in /public (404) even before this rewrite, and the architecture it would
+# need to show has changed (MobileNetV2 + frequency path, not XceptionNet +
+# Random Forest). TODO(tabeen): produce and add a current architecture
+# diagram, then re-add `diagram: "/diagrams/architecture.png"` here.
+research:
+  summary: "Preprint in preparation. TODO(tabeen): arXiv link."
+featured: true
+status: "Active"
+---
+
+*Tabeen Raoof and Joao Cozza · CS483, San Francisco Bay University, 2026 · supervised by Prof. Emdad Khan*
+
+## Overview
+
+Most published detectors treat image authenticity as binary — real versus fake. TruPhoto outputs three classes: Real, Forged (splicing and copy-move), and AI-Generated. A Photoshop manipulation and a diffusion output have different forensic signatures, and collapsing them discards information a forensic user needs. The three-class framing is a harder problem: chance is 33%, not 50%.
+
+## Approach
+
+Two parallel feature paths feed a single classifier.
+
+**Semantic path.** A frozen MobileNetV2 backbone produces 1,280-dimensional semantic features — what is in the image.
+
+**Frequency-domain path.** A parallel path produces 228-dimensional content-invariant features — how the image was made:
+
+- FFT radial power-spectrum fitting, following Dzanic et al. (NeurIPS 2020) — 102-d
+- Block-DCT coefficient statistics, following Frank et al. (ICML 2020) — 126-d
+
+The two paths are concatenated to 1,508 dimensions and classified by an RBF-kernel SVM. Nothing is fine-tuned; both backbones are frozen feature extractors. This is the project's actual contribution — the frequency path is what separates TruPhoto from a CNN-features-plus-classifier baseline.
+
+**Results.** 75.70% test accuracy on 4,519 held-out images, a +2.43pp improvement over the CNN-only baseline of 73.27%. The frequency features alone reach 71.14% accuracy using only 228 dimensions and no semantic content at all. Training data: 30,123 images from 36 sources across ArtiFact and CASIA 2.0, spanning 25 AI generators. The full pipeline is CPU-only and runs in about 5.5 hours on a laptop with no GPU.
+
+## What the iterations showed
+
+Accuracy *decreased* across the first four iterations as each shortcut was removed — roughly 84% → 76% → 77.6% → 74.9%. A cross-source sanity check surfaced three dataset-handling bugs along the way:
+
+1. A label-inference bug silently dropping 24 of 25 AI generator sources.
+2. Sampling that gave one generator about 70% of the AI training set.
+3. A dataset-identity shortcut — the model had learned to tell ArtiFact apart from CASIA rather than real from forged.
+
+Iteration 5 recovered 2.43pp through the frequency path — a genuinely new representation, rather than a new shortcut.
+
+## Why we didn't fine-tune
+
+Three independent lines of evidence pointed away from fine-tuning the backbone:
+
+- **Per-source spread.** Accuracy varied by 62.7pp for AI-Generated and 59.4pp for Real across sources, both far above the ~15pp threshold at which fine-tuning is considered safe.
+- **More data didn't help.** Accuracy fell when training data was increased 2.5×, indicating a representational ceiling rather than a data shortage.
+- **A specific failure mode.** StyleGAN3 at 37% accuracy is a representation problem, not a capacity problem — its alias-free upsampling removes exactly the spectral artifacts the DCT path is built to detect.
+
+## Limitations
+
+- StyleGAN3 (37%) and Stable Diffusion (62%) are both below deployment-useful thresholds.
+- JPEG storage at q=95 attenuates frequency features.
+- Generative inpainting regressed accuracy by about 10pp, because image-level frequency statistics get diluted by surrounding authentic pixels.
+- Output probabilities are uncalibrated.
+- Single-seed evaluation — no cross-validation.
+
+## Stack
+
+Python, PyTorch, timm, MobileNetV2, scikit-learn, scipy, numpy, Pillow, Gradio
+
+## Links
+
+- GitHub: [github.com/TabeenRaoof/xception-photo-verification](https://github.com/TabeenRaoof/xception-photo-verification)
+- Preprint: in preparation — TODO(tabeen): arXiv link

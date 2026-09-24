@@ -26,7 +26,8 @@ export function NavLink({ href, children }: NavLinkProps) {
   return (
     <Link
       href={href}
-      className={`text-sm transition-colors ${
+      aria-current={isActive ? "page" : undefined}
+      className={`text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm ${
         isActive
           ? "text-ink border-b-[1.5px] border-accent pb-0.5"
           : "text-muted hover:text-ink"

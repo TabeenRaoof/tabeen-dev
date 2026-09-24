@@ -11,6 +11,45 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // 2026-09 IA restructure: /ml, /projects, /writing became /research, /work,
+  // /notes. Specific old slugs are redirected to their new home individually
+  // (categories were reshuffled, not renamed 1:1); wildcard fallbacks catch
+  // anything not listed explicitly so old links never 404.
+  async redirects() {
+    return [
+      // ---- /ml/* -----------------------------------------------------
+      {
+        source: "/ml/image-authenticity-classifier",
+        destination: "/research/truphoto",
+        permanent: true,
+      },
+      {
+        source: "/ml/fake-job-detector",
+        destination: "/work/fake-job-detector",
+        permanent: true,
+      },
+      { source: "/ml", destination: "/research", permanent: true },
+      { source: "/ml/:slug*", destination: "/research/:slug*", permanent: true },
+
+      // ---- /projects/* -------------------------------------------------
+      {
+        source: "/projects/busybees",
+        destination: "/work/busybees",
+        permanent: true,
+      },
+      {
+        source: "/projects/text-autocomplete-trie",
+        destination: "/work/text-autocomplete-trie",
+        permanent: true,
+      },
+      { source: "/projects", destination: "/work", permanent: true },
+      { source: "/projects/:slug*", destination: "/work/:slug*", permanent: true },
+
+      // ---- /writing/* ----------------------------------------------------
+      { source: "/writing", destination: "/notes", permanent: true },
+      { source: "/writing/:slug*", destination: "/notes/:slug*", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -20,7 +20,43 @@ interface LogoProps {
   className?: string;
 }
 
+// The 3x3 scattered-dot grid (below) is legible as the site's mark, but it
+// also happens to be the standard icon shorthand for an "app launcher" /
+// grid-menu control, which can misread as a clickable toggle rather than
+// a logo. LogoAlt is a proposed alternative closer to the source photo's
+// actual pattern — a single horizontal row of paired ovals, varying in
+// size and spacing — offered as an opt-in variant rather than a swap of
+// the default mark. Enable for testing via NEXT_PUBLIC_LOGO_VARIANT=alt.
+export function LogoAlt({ size = 22, className }: LogoProps) {
+  const h = size;
+  const w = size * 1.7;
+  return (
+    <svg
+      width={w}
+      height={h}
+      viewBox="0 0 38 22"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+    >
+      <rect width="38" height="22" fill="#2C2622" rx="3" />
+      {/* A single row of paired ovals, varying size/spacing — closer to the
+          source photo's row of spots than a uniform grid. */}
+      <ellipse cx="6" cy="11" rx="2.4" ry="1.6" fill="#F5F2E8" />
+      <ellipse cx="11.5" cy="11" rx="1.5" ry="1.1" fill="#D4DC3F" />
+      <ellipse cx="16" cy="11" rx="2.8" ry="1.9" fill="#F5F2E8" />
+      <ellipse cx="21.5" cy="11" rx="1.3" ry="0.9" fill="#D4DC3F" />
+      <ellipse cx="26" cy="11" rx="2.2" ry="1.5" fill="#F5F2E8" />
+      <ellipse cx="31.5" cy="11" rx="1.7" ry="1.2" fill="#D4DC3F" />
+    </svg>
+  );
+}
+
 export function Logo({ size = 22, className }: LogoProps) {
+  if (process.env.NEXT_PUBLIC_LOGO_VARIANT === "alt") {
+    return <LogoAlt size={size} className={className} />;
+  }
+
   return (
     <svg
       width={size}

@@ -1,0 +1,26 @@
+---
+title: "Why our uncertainty measure was wrong"
+description: "ProofShape's original uncertainty calculation put generative-completion spread in the denominator for observed surface — which quietly declared every observed region infinitely precise."
+date: "2026-09-10"
+---
+
+[ProofShape](/work/proofshape) compares a phone-photographed manufactured part against its CAD file and needs to report, region by region, how much to trust its own measurement. Some of the part's surface is directly observed by the camera; some of it is inferred by a generative completion model filling in views the camera never captured. The system needs an uncertainty estimate that treats those two kinds of surface differently, and the first version of that estimate got it backwards.
+
+## The original design
+
+The original signal-to-noise calculation for a given surface region put the spread across K generative completions of that region in the denominator: more agreement across completions meant a higher SNR, meant more confidence.
+
+That's a reasonable idea for surface the camera never actually saw — completion spread genuinely reflects the generative model's uncertainty about geometry it had to guess at. The problem is what happens for surface the camera *did* observe. Wherever a region is directly measured, the completion model isn't really guessing at all — it converges tightly on the observed geometry, because it has strong evidence for what's there. Spread collapses toward zero. Plugged into a denominator, that collapse doesn't mean "measured precisely" — it means the SNR formula reports near-infinite confidence, regardless of how noisy the actual camera measurement was.
+
+In other words, the measure was answering "how much did the completion model agree with itself," and silently treating that as a proxy for "how much should I trust the camera measurement" — two different questions that happen to look similar when you only check the easy case.
+
+## The fix
+
+Observed surface and inferred surface need separate uncertainty signals, because they're uncertain about different things:
+
+- For **observed surface**, the correct measure is multi-view depth-residual spread — how much independent camera views of the same real geometry disagree with each other. That's a direct measurement of camera and reconstruction noise.
+- For **inferred surface**, completion disagreement across the K generated completions is the right signal, but it belongs in capture guidance — telling the person taking photos "this region needs another angle" — not in the final pass/fail confidence report for surface that was never actually measured.
+
+## The general lesson
+
+An uncertainty estimate has to measure the thing the downstream decision actually depends on. It's easy to build a number that behaves sensibly in the case you tested first and then reuse it somewhere the underlying assumption silently breaks — here, "spread across completions" was a fine idea for one kind of surface and actively misleading for another, and the formula didn't know the difference. The fix isn't a better formula so much as recognizing that two different questions were being asked and answering each with the signal that's actually informative for it.
