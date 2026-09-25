@@ -10,6 +10,7 @@ import {
   formatDate,
 } from "@/lib/content";
 import { Badge } from "@/components/Badge";
+import { DemoFrame } from "@/components/DemoFrame";
 import type { Metadata } from "next";
 
 // Dynamic route for individual research entries.
@@ -146,15 +147,7 @@ export default async function ResearchDetailPage({ params }: PageProps) {
             {meta.demoLabel ?? "Try it"}
           </p>
           <div className="lg:mx-[-7rem] xl:mx-[-12rem]">
-            <div className="bg-surface border border-line rounded-md overflow-hidden">
-              <iframe
-                src={meta.demo}
-                title={`${meta.title} — live demo`}
-                className="w-full h-[600px] border-0"
-                loading="lazy"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-              />
-            </div>
+            <DemoFrame src={meta.demo} title={`${meta.title} — live demo`} heightClassName="h-[600px]" />
           </div>
         </section>
       )}

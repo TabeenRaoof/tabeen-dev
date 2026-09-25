@@ -10,6 +10,7 @@ import {
   formatDate,
 } from "@/lib/content";
 import { Badge } from "@/components/Badge";
+import { DemoFrame } from "@/components/DemoFrame";
 import type { Metadata } from "next";
 
 // Work item detail page — pulls from /content/work/.
@@ -125,9 +126,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
               larger screens so the demo has room to breathe. On mobile it stays
               within the page margins. */}
           <div className="lg:mx-[-7rem] xl:mx-[-12rem]">
-            <div className="bg-surface border border-line rounded-md overflow-hidden">
-              <iframe src={meta.demo} title={`${meta.title} — live demo`} className="w-full h-[600px] border-0" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
-            </div>
+            <DemoFrame src={meta.demo} title={`${meta.title} — live demo`} heightClassName="h-[600px]" />
           </div>
         </section>
       )}
@@ -156,15 +155,11 @@ export default async function WorkDetailPage({ params }: PageProps) {
           )}
           {/* Breakout — same wider container as the primary demo above */}
           <div className="lg:mx-[-7rem] xl:mx-[-12rem]">
-            <div className="bg-surface border border-line rounded-md overflow-hidden">
-              <iframe
-                src={meta.demo2.url}
-                title={`${meta.title} — ${meta.demo2.label}`}
-                className="w-full h-[700px] border-0"
-                loading="lazy"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-              />
-            </div>
+            <DemoFrame
+              src={meta.demo2.url}
+              title={`${meta.title} — ${meta.demo2.label}`}
+              heightClassName="h-[700px]"
+            />
           </div>
         </section>
       )}
