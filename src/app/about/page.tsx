@@ -115,7 +115,7 @@ export default function AboutPage() {
         </p>
         <a
           href="/resume.pdf"
-          download
+          download="Tabeen_Raoof_Resume.pdf"
           className="inline-flex items-center gap-1.5 text-sm text-ink px-4 py-3 border border-ink rounded-md hover:bg-surface transition-colors"
         >
           Download resume (PDF)
