@@ -15,9 +15,10 @@ Built with Next.js 15, TypeScript, Tailwind CSS v4, and MDX. Single forest dark 
 5. [Setting up comments (Giscus)](#setting-up-comments-giscus)
 6. [Deploying to Cloudflare Pages](#deploying-to-cloudflare-pages)
 7. [Connecting your domain](#connecting-your-domain)
-8. [LinkedIn previews](#linkedin-previews)
-9. [Customization](#customization)
-10. [Project structure](#project-structure)
+8. [Analytics](#analytics)
+9. [LinkedIn previews](#linkedin-previews)
+10. [Customization](#customization)
+11. [Project structure](#project-structure)
 
 ---
 
@@ -236,6 +237,82 @@ That's it. tabeen.dev is now live.
 
 ---
 
+## Analytics
+
+Self-hosted page-view tracking — no third-party service, no cookies, no
+raw IPs or user agents stored. Storage is [Cloudflare D1](https://developers.cloudflare.com/d1/),
+a SQLite database included with Cloudflare Pages.
+
+**How it works:**
+- `src/components/Analytics.tsx` sends one `navigator.sendBeacon` per page
+  view to `/api/track` (`src/app/api/track/route.ts`), which writes a row
+  to D1: the path, the external referrer's hostname (if any), the visitor's
+  country (from Cloudflare's `CF-IPCountry` header), and a *visitor hash*.
+- The visitor hash is `SHA-256(salt, today's date, IP, user agent)`,
+  truncated to 16 hex characters. Because the date is part of the input,
+  the same person hashes to a completely different value tomorrow — so
+  "unique visitors" can be counted per day without a cookie, and nobody
+  can be tracked across days from this data. The salt is a secret you set
+  once (below); without it, nothing is recorded.
+- Bots, `/api/`, `/stats`, and this site's own internal pages are never
+  tracked. Browsers sending `Do Not Track` or the Global Privacy Control
+  signal are skipped client-side.
+- `/stats` (`src/app/stats/page.tsx`) is the dashboard: total views/visitors,
+  a daily chart with a table-view fallback, and top pages/referrers/countries.
+  It's gated by HTTP Basic auth (any username, one shared password) in
+  `src/middleware.ts`, and fails closed — if the password isn't configured,
+  the page 503s instead of being public.
+
+### One-time setup (Cloudflare dashboard — can't be done from the CLI/repo)
+
+1. **Create the D1 database:**
+   ```bash
+   npx wrangler d1 create tabeen-analytics
+   ```
+   This prints a `database_id` — you don't need to put it anywhere in this
+   repo (production reads the binding from the dashboard, not a committed
+   config file); just keep the terminal output for step 2.
+
+2. **Apply the schema to the real database:**
+   ```bash
+   npx wrangler d1 execute tabeen-analytics --remote --file=migrations/0001_init.sql
+   ```
+
+3. **Bind it to the Pages project:** Cloudflare Pages dashboard → your
+   project → Settings → Functions → D1 database bindings → add binding,
+   variable name `DB`, select `tabeen-analytics`. Do this for both
+   Production and Preview.
+
+4. **Set two encrypted environment variables** (Settings → Environment
+   variables, as *secret*, for both Production and Preview):
+   - `ANALYTICS_SALT` — a long random string, e.g. `openssl rand -hex 32`
+   - `STATS_PASSWORD` — whatever password you want to view `/stats` with
+
+5. **Redeploy** (Settings changes don't apply to already-running
+   deployments — trigger a new one, e.g. an empty commit or "Retry
+   deployment").
+
+6. Visit `https://tabeen.dev/stats` and sign in with any username and the
+   `STATS_PASSWORD` you set.
+
+### Local development
+
+```bash
+cp .dev.vars.example .dev.vars     # fill in a salt and a password
+npm run analytics:migrate:local    # creates and seeds a local D1 (gitignored)
+npm run dev
+```
+
+`next.config.mjs` calls `setupDevPlatform()` in development, which reads
+`wrangler.dev.toml` and `.dev.vars` to simulate the D1 binding locally —
+`npm run build` / `next build` don't need any of this and are unaffected.
+
+`wrangler.dev.toml` (not `wrangler.toml`) is deliberate: Cloudflare Pages
+treats a committed `wrangler.toml` as the source of truth for production
+bindings, which would fight with what's configured in the dashboard above.
+
+---
+
 ## LinkedIn previews
 
 When you paste a tabeen.dev URL on LinkedIn, it should show a preview with the page title, description, and an auto-generated image.
@@ -321,6 +398,8 @@ tabeen-dev/
 ├── src/
 │   ├── app/                    # Next.js App Router pages
 │   │   ├── api/og/             # Auto-generated OG image route
+│   │   ├── api/track/          # Analytics beacon endpoint
+│   │   ├── stats/               # Analytics dashboard (password-gated)
 │   │   ├── work/               # Work pages (index + [slug])
 │   │   ├── research/           # Research pages (index + [slug])
 │   │   ├── notes/              # Notes pages (index + [slug])
@@ -335,10 +414,16 @@ tabeen-dev/
 │   │   ├── Header.tsx
 │   │   ├── Footer.tsx
 │   │   ├── NavLink.tsx
+│   │   ├── Analytics.tsx       # Page-view beacon (client)
 │   │   └── Comments.tsx        # Giscus wrapper
-│   └── lib/
-│       └── content.ts          # MDX file loading + frontmatter parsing
+│   ├── lib/
+│   │   ├── content.ts          # MDX file loading + frontmatter parsing
+│   │   └── analytics.ts        # Visitor hashing, bot filter, auth check
+│   └── middleware.ts           # Basic-auth gate for /stats
+├── migrations/                 # D1 schema (analytics)
 ├── .env.local.example          # Template for local env vars
+├── .dev.vars.example           # Template for local Cloudflare secrets
+├── wrangler.dev.toml           # Local-only D1 config (see Analytics)
 ├── next.config.mjs
 ├── package.json
 ├── postcss.config.mjs

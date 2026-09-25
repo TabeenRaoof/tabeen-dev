@@ -1,3 +1,11 @@
+// In `next dev`, expose Cloudflare bindings (the analytics D1 database and
+// .dev.vars secrets) to getRequestContext(), backed by a local simulated D1.
+// Production gets its bindings from the Cloudflare Pages dashboard instead.
+if (process.env.NODE_ENV === "development") {
+  const { setupDevPlatform } = await import("@cloudflare/next-on-pages/next-dev");
+  await setupDevPlatform({ configPath: "./wrangler.dev.toml" });
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Cloudflare Pages compatibility

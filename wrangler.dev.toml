@@ -1,0 +1,17 @@
+# Local development only. Read by setupDevPlatform() in next.config.mjs and by
+# `npm run analytics:migrate:local`.
+#
+# Deliberately NOT named wrangler.toml: Cloudflare Pages treats a wrangler.toml
+# as the source of truth for production bindings and variables, which would
+# override (and lock) what is configured in the Cloudflare dashboard. Production
+# bindings for this project are set in the dashboard — see README → Analytics.
+
+name = "tabeen-dev"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "tabeen-analytics"
+database_id = "local-dev"
+migrations_dir = "migrations"
