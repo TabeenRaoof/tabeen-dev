@@ -27,6 +27,65 @@ export function getAnalyticsEnv() {
   };
 }
 
+// A deliberately minimal local type for the one Cloudflare request.cf field
+// this needs, passed as the generic to getOptionalRequestContext() instead
+// of relying on its default IncomingRequestCfProperties type — that type
+// comes from @cloudflare/workers-types, which isn't a dependency of this
+// project (next-on-pages only references it in its own .d.ts files, guarded
+// by tsconfig's skipLibCheck). Declaring the one field used here avoids
+// depending on a package that isn't actually installed.
+interface CfHostingProps extends Record<string, unknown> {
+  asOrganization?: string;
+}
+
+export function getRequestOrg(): string | undefined {
+  return getOptionalRequestContext<CfHostingProps>()?.cf?.asOrganization;
+}
+
+// Substrings of `cf.asOrganization` (Cloudflare's free, no-binding-required
+// ASN lookup) for major cloud/hosting providers. Matched case-insensitively.
+// This is a coarse, maintained-by-hand signal, not a real IP-intelligence
+// database: it exists to catch the common case (a scraper or headless
+// browser running on rented cloud infrastructure with a spoofed, normal-
+// looking User-Agent — see isBot() above, which only catches bots that
+// identify themselves honestly). It does not attempt to catch every
+// possible hosting provider, and it will misclassify a human on a
+// cloud-hosted VPN or proxy as non-human; for a personal site's traffic
+// counts, that tradeoff is fine.
+const HOSTING_ORGS = [
+  "amazon",
+  "aws",
+  "google cloud",
+  "google llc",
+  "microsoft",
+  "azure",
+  "digitalocean",
+  "linode",
+  "akamai",
+  "ovh",
+  "hetzner",
+  "oracle",
+  "ibm cloud",
+  "softlayer",
+  "vultr",
+  "choopa",
+  "alibaba",
+  "tencent",
+  "contabo",
+  "scaleway",
+  "upcloud",
+  "hostinger",
+  "leaseweb",
+  "cloudflare, inc",
+  "cloudflare workers",
+];
+
+export function isHostingProvider(asOrganization: string | undefined): boolean {
+  if (!asOrganization) return false;
+  const lower = asOrganization.toLowerCase();
+  return HOSTING_ORGS.some((org) => lower.includes(org));
+}
+
 export function utcDay(date = new Date()): string {
   return date.toISOString().slice(0, 10);
 }

@@ -1,6 +1,8 @@
 import {
   getAnalyticsEnv,
+  getRequestOrg,
   isBot,
+  isHostingProvider,
   isTrackablePath,
   utcDay,
   visitorHash,
@@ -28,6 +30,9 @@ export async function POST(request: Request) {
 
   const userAgent = request.headers.get("user-agent") ?? "";
   if (isBot(userAgent)) return NO_CONTENT();
+  // Catches automated traffic running on rented cloud infrastructure with a
+  // browser-like User-Agent that isBot() wouldn't flag — see isHostingProvider().
+  if (isHostingProvider(getRequestOrg())) return NO_CONTENT();
 
   let payload: { path?: unknown; referrer?: unknown };
   try {
