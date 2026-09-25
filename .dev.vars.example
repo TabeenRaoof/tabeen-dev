@@ -1,0 +1,10 @@
+# Copy to .dev.vars (gitignored) for local development of the analytics.
+# Production values are set as encrypted variables in the Cloudflare Pages
+# dashboard — see README → Analytics.
+
+# Password for the /stats page (any username works).
+STATS_PASSWORD=change-me
+
+# Long random string used to hash visitors. Generate one with:
+#   openssl rand -hex 32
+ANALYTICS_SALT=change-me-to-a-long-random-string

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "pages:build": "npx @cloudflare/next-on-pages",
-    "preview": "npm run pages:build && wrangler pages dev"
+    "preview": "npm run pages:build && wrangler pages dev",
+    "analytics:migrate:local": "wrangler d1 migrations apply tabeen-analytics --local --config wrangler.dev.toml"
   },
   "dependencies": {
     "next": "^15.1.0",

@@ -8,9 +8,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      // Internal logo-comparison page — not part of the site, not for
+      // Internal pages and endpoints — not part of the site, not for
       // search engines or crawlers to index.
-      disallow: "/logo-preview-internal",
+      disallow: ["/logo-preview-internal", "/stats", "/api/"],
     },
     sitemap: "https://tabeen.dev/sitemap.xml",
   };
