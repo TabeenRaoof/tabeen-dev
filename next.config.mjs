@@ -40,11 +40,9 @@ const nextConfig = {
       { source: "/ml/:slug*", destination: "/research/:slug*", permanent: true },
 
       // ---- /projects/* -------------------------------------------------
-      {
-        source: "/projects/busybees",
-        destination: "/work/busybees",
-        permanent: true,
-      },
+      // No specific redirect for /projects/busybees: the BusyBees project
+      // page was removed, so the wildcard rule below now correctly sends
+      // that old URL to /work/busybees, which 404s.
       {
         source: "/projects/text-autocomplete-trie",
         destination: "/work/text-autocomplete-trie",
