@@ -9,12 +9,17 @@ import { Logo } from "./Logo";
 // abstracted from the caterpillar's body spots. The orange dot in
 // "tabeen.dev" wordmark gives a small color punctuation alongside it.
 //
-// Spacing strategy:
-//   - Mobile: tight nav gap (gap-4 = 16px) so all 4 nav items fit, with a
-//     minimum gap-4 between the logo group and the nav block so they
-//     never touch. justify-between still pushes them apart when there's room.
-//   - Desktop (sm+): larger gap-7 between nav items, with the natural
-//     justify-between separation between logo and nav.
+// Layout:
+//   - Phones (< sm / 640px): two rows — logo on top, the five nav links
+//     spread edge to edge on a second row. One row doesn't fit: logo +
+//     wordmark + five links need ~440px against ~335px of content width
+//     on a 375px phone, which overflowed the viewport sideways.
+//   - sm and up: the original single row, logo left, nav right.
+//
+// Row gap on phones is gap-5 (20px) because both rows carry invisible
+// tap-target extensions (logo before:-inset-y-2 = 8px down, NavLink
+// before:-inset-y-3 = 12px up): 8 + 12 = 20, so the hit areas meet
+// without overlapping.
 
 export function Header() {
   return (
@@ -28,16 +33,16 @@ export function Header() {
         Skip to content
       </a>
       <header className="border-b border-line">
-        <div className="max-w-3xl mx-auto px-5 sm:px-8 py-5 flex items-center justify-between gap-4">
-          {/* Logo block — shrink-0 prevents the logo from being squished by a
-              crowded nav. The flex gap-2.5 keeps the mark close to the wordmark
-              without touching. */}
+        <div className="max-w-3xl mx-auto px-5 sm:px-8 py-4 sm:py-5 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          {/* Logo block — self-start keeps it content-width in the phone
+              column layout (otherwise the whole row becomes the home link);
+              shrink-0 stops the nav squeezing it on the desktop row. */}
           <Link
             href="/"
-            // relative + before:-inset-y-3 grows the tap target to ~44px
+            // relative + before:-inset-y-* grows the tap target to ~44px
             // tall (WCAG 2.5.5) via an invisible pseudo-element, matching
             // the approach in NavLink — no visual change to the logo row.
-            className="relative before:absolute before:-inset-y-3 before:-inset-x-1 before:content-[''] flex items-center gap-2.5 hover:opacity-80 transition-opacity shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
+            className="relative before:absolute before:-inset-y-2 sm:before:-inset-y-3 before:-inset-x-1 before:content-[''] self-start flex items-center gap-2.5 hover:opacity-80 transition-opacity shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
             aria-label="Tabeen Raoof — home"
           >
             <Logo size={22} />
@@ -46,9 +51,10 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Nav links — tighter gap on mobile (gap-4), more breathing
-              room on desktop (sm:gap-7). */}
-          <nav className="flex items-center gap-4 sm:gap-7">
+          {/* Nav links — spread edge to edge on phones (justify-between,
+              with gap-3 as the floor on very narrow screens), grouped
+              right with gap-7 on sm and up. */}
+          <nav className="flex items-center justify-between gap-3 sm:justify-start sm:gap-7">
             <NavLink href="/work">Work</NavLink>
             <NavLink href="/research">Research</NavLink>
             <NavLink href="/notes">Notes</NavLink>

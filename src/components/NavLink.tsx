@@ -31,9 +31,9 @@ export function NavLink({ href, children }: NavLinkProps) {
       // (WCAG 2.5.5 / mobile touch target guidance) via a generated
       // pseudo-element, rather than real padding — so the visible text
       // size and the active-state underline position are untouched.
-      // Horizontal expansion is capped below half the gap between items
-      // (gap-4=16px on mobile, gap-7=28px on sm+) so adjacent nav items'
-      // hit areas never overlap into ambiguous double-tap zones.
+      // Horizontal expansion is capped at half the minimum gap between
+      // items (gap-3=12px on phones, gap-7=28px on sm+) so adjacent nav
+      // items' hit areas never overlap into ambiguous double-tap zones.
       className={`relative before:absolute before:-inset-y-3 before:-inset-x-1.5 sm:before:-inset-x-3 before:content-[''] text-sm transition-colors pb-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm ${
         isActive
           ? "text-ink border-b-[1.5px] border-accent"
