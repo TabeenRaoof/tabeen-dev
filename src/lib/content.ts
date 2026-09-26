@@ -57,8 +57,16 @@ export interface ContentMeta {
   };
   /** YouTube/Vimeo URL or video file path */
   video?: string;
-  /** Path to architecture diagram image, relative to /public */
-  diagram?: string;
+  /** Architecture diagram. `src` is relative to /public; `width`/`height`
+   *  are the image's CSS-pixel size (half the pixel size of a 2x export);
+   *  `alt` should describe what the diagram shows, not just name it. */
+  diagram?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    caption?: string;
+  };
   /** Optional research section — paper PDF, results, etc. */
   research?: {
     summary?: string;

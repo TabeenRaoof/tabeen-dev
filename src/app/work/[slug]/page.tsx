@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
@@ -11,6 +10,7 @@ import {
 } from "@/lib/content";
 import { Badge } from "@/components/Badge";
 import { DemoFrame } from "@/components/DemoFrame";
+import { DiagramFigure } from "@/components/DiagramFigure";
 import type { Metadata } from "next";
 
 // Work item detail page — pulls from /content/work/.
@@ -164,14 +164,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
         </section>
       )}
 
-      {meta.diagram && (
-        <section className="pb-8">
-          <h2 className="font-serif text-2xl text-ink mb-4">Architecture</h2>
-          <div className="bg-surface border border-line rounded-md p-4">
-            <Image src={meta.diagram} alt={`${meta.title} architecture diagram`} width={800} height={500} className="w-full h-auto" />
-          </div>
-        </section>
-      )}
+      {meta.diagram && <DiagramFigure diagram={meta.diagram} />}
 
       {meta.video && (
         <section className="pb-8">

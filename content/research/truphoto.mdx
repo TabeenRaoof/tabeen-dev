@@ -7,9 +7,12 @@ tags: ["Computer vision"]
 stack: ["Python", "PyTorch", "timm", "MobileNetV2", "scikit-learn", "scipy", "numpy", "Pillow", "Gradio"]
 github: "https://github.com/TabeenRaoof/xception-photo-verification"
 # Confirmed: no public demo for this project. `demo` intentionally omitted.
-# `diagram` intentionally omitted: no current architecture diagram exists yet
-# (MobileNetV2 + frequency path). Add one, then re-add
-# `diagram: "/diagrams/architecture.png"` here.
+diagram:
+  src: "/diagrams/truphoto-pipeline.png"
+  width: 1190
+  height: 1019
+  alt: "Flowchart of the TruPhoto experiment pipeline. Images are resized and split into train, validation and test sets, then three frozen feature paths run in parallel: CNN features (Xception or MobileNetV2), frequency features (FFT radial bins and DCT statistics), and a CLIP ViT-L/14 baseline. Random-forest and SVM classifiers are trained on each path alone and on CNN plus frequency and CLIP plus frequency combinations, and all are compared in test evaluation. The CNN plus frequency path is highlighted as the final system."
+  caption: "Highlighted in orange: the final system — MobileNetV2 and frequency features, concatenated and classified by an SVM."
 research:
   summary: "Preprint in preparation — arXiv link coming soon."
 status: "Active"

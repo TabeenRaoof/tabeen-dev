@@ -90,7 +90,12 @@ tags: ["Computer vision", "CNN"]      # Pills shown on the card and detail page
 stack: ["Python", "PyTorch"]          # Tech stack pills at bottom of detail page
 github: "https://github.com/..."      # Adds a GitHub button
 demo: "https://huggingface.co/..."    # Embeds the URL as a live demo iframe
-diagram: "/diagrams/arch.png"         # Path to architecture image (under /public)
+diagram:                              # Architecture image (under /public), shown wide + clickable
+  src: "/diagrams/arch.png"
+  width: 1200                         # CSS px (half the pixels of a 2x export)
+  height: 800
+  alt: "Describe what the diagram shows, not just its name"
+  caption: "Optional line under the image"
 video: "https://youtube.com/embed/..."  # Embeds video (use YouTube embed URL)
 status: "Active"                      # "Active", "In progress", "Complete", etc.
 featured: true                        # Show on home page (only one project should be featured)
