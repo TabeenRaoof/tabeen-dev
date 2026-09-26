@@ -74,12 +74,12 @@ export default function HomePage() {
         <p className="text-sm text-muted mb-4 tracking-wide">
           Tabeen Raoof — Bay Area · Available from January 2027
         </p>
-        <h1 className="text-4xl sm:text-5xl text-ink mb-6 max-w-2xl">
+        <h1 className="text-4xl sm:text-5xl text-ink mb-6">
           Engineer building{" "}
           <em className="text-accent italic font-serif">applied AI systems</em>{" "}
           — and making them work in production.
         </h1>
-        <p className="text-base text-muted leading-relaxed max-w-xl mb-8">
+        <p className="text-base text-muted leading-relaxed mb-8">
           At Xylo AI Studios, I own the services that bring financial-advisory
           firms&apos; email, calendar, CRM and meeting data into one pipeline —
           and built the monitoring that caught a live outage nobody had
