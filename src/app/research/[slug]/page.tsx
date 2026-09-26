@@ -69,7 +69,7 @@ export default async function ResearchDetailPage({ params }: PageProps) {
   const { meta, body } = item;
 
   return (
-    <article className="max-w-2xl mx-auto px-6 sm:px-8">
+    <article className="max-w-article mx-auto px-6 sm:px-8">
       <header className="pt-12 pb-8">
         <Link
           href="/research"
@@ -146,7 +146,7 @@ export default async function ResearchDetailPage({ params }: PageProps) {
           <p className="text-2xs text-muted mb-2.5 uppercase tracking-wider">
             {meta.demoLabel ?? "Try it"}
           </p>
-          <div className="lg:mx-[-7rem] xl:mx-[-12rem]">
+          <div className="lg:mx-[-5rem] xl:mx-[-12rem]">
             <DemoFrame src={meta.demo} title={`${meta.title} — live demo`} heightClassName="h-[600px]" />
           </div>
         </section>

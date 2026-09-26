@@ -73,6 +73,14 @@
   --text-lg: 1.3125rem;   /* 21px (18px) */
   --text-xl: 1.4375rem;   /* 23px (20px) */
 
+  /* Page widths (generate max-w-page / max-w-article). Widened from
+     Tailwind's 3xl (48rem) and 2xl (42rem) to cut the empty side margins
+     by ~20% on a typical laptop window (~1,485px wide): index pages,
+     header and footer share `page`; articles, About and Contact use the
+     narrower `article` so long-form lines don't get too long. */
+  --container-page: 58rem;    /* 928px */
+  --container-article: 53rem; /* 848px */
+
   /* Spacing scale — Tailwind's default 0.25rem-based scale (gap-1.5, px-2.5,
      etc.) is used consistently throughout; no one-off spacing values were
      found in components, so no additional spacing tokens were needed. */

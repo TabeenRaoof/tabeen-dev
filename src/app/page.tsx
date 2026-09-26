@@ -60,7 +60,7 @@ export default function HomePage() {
   const recentNotes = getAllContent("notes").slice(0, 3);
 
   return (
-    <div className="max-w-3xl mx-auto px-6 sm:px-8">
+    <div className="max-w-page mx-auto px-6 sm:px-8">
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger

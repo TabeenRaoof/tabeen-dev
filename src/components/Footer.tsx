@@ -7,7 +7,7 @@ export function Footer() {
 
   return (
     <footer className="border-t border-line">
-      <div className="max-w-3xl mx-auto px-6 sm:px-8 py-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs text-muted">
+      <div className="max-w-page mx-auto px-6 sm:px-8 py-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs text-muted">
         <span>© {year} Tabeen Raoof</span>
         <div className="flex gap-4">
           {/* relative + before:-inset gives each link a ~44px invisible tap

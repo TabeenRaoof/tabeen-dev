@@ -16,7 +16,7 @@ export default function NotesIndexPage() {
   const posts = getAllContent("notes");
 
   return (
-    <div className="max-w-3xl mx-auto px-6 sm:px-8">
+    <div className="max-w-page mx-auto px-6 sm:px-8">
       <section className="py-14">
         <p className="text-xs text-muted mb-3 uppercase tracking-wider">Notes</p>
         <h1 className="text-3xl sm:text-4xl text-ink mb-4 max-w-xl">

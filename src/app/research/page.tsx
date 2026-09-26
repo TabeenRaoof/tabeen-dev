@@ -16,7 +16,7 @@ export default function ResearchIndexPage() {
   const items = getAllContent("research");
 
   return (
-    <div className="max-w-3xl mx-auto px-6 sm:px-8">
+    <div className="max-w-page mx-auto px-6 sm:px-8">
       <section className="py-14">
         <p className="text-xs text-muted mb-3 uppercase tracking-wider">
           Research

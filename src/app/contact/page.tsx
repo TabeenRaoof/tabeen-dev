@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="max-w-2xl mx-auto px-6 sm:px-8">
+    <div className="max-w-article mx-auto px-6 sm:px-8">
       <section className="py-14">
         <h1 className="text-3xl sm:text-4xl text-ink mb-6">Contact</h1>
         <p className="text-sm text-muted leading-relaxed max-w-md mb-10">

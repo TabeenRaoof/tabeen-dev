@@ -72,7 +72,7 @@ export default async function StatsPage({ searchParams }: PageProps) {
   const totalVisitors = rows.reduce((sum, r) => sum + r.visitors, 0);
 
   return (
-    <div className="max-w-3xl mx-auto px-6 sm:px-8">
+    <div className="max-w-page mx-auto px-6 sm:px-8">
       <section className="pt-14 pb-8">
         <p className="text-xs text-muted mb-3 uppercase tracking-wider">Stats</p>
         <h1 className="text-3xl sm:text-4xl text-ink mb-4">Site analytics</h1>
@@ -190,7 +190,7 @@ function countryName(code: string): string {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="max-w-3xl mx-auto px-6 sm:px-8 py-14">
+    <div className="max-w-page mx-auto px-6 sm:px-8 py-14">
       <h1 className="text-3xl sm:text-4xl text-ink mb-4">Site analytics</h1>
       <p className="text-sm text-muted leading-relaxed max-w-lg">{children}</p>
     </div>

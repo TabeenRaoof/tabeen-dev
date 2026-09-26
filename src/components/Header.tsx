@@ -33,7 +33,7 @@ export function Header() {
         Skip to content
       </a>
       <header className="border-b border-line">
-        <div className="max-w-3xl mx-auto px-5 sm:px-8 py-4 sm:py-5 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+        <div className="max-w-page mx-auto px-5 sm:px-8 py-4 sm:py-5 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           {/* Logo block — self-start keeps it content-width in the phone
               column layout (otherwise the whole row becomes the home link);
               shrink-0 stops the nav squeezing it on the desktop row. */}

@@ -66,7 +66,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
   const { meta, body } = project;
 
   return (
-    <article className="max-w-2xl mx-auto px-6 sm:px-8">
+    <article className="max-w-article mx-auto px-6 sm:px-8">
       <header className="pt-12 pb-8">
         <Link
           href="/work"
@@ -125,7 +125,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
           {/* Breakout container — extends beyond the article's max-w-2xl on
               larger screens so the demo has room to breathe. On mobile it stays
               within the page margins. */}
-          <div className="lg:mx-[-7rem] xl:mx-[-12rem]">
+          <div className="lg:mx-[-5rem] xl:mx-[-12rem]">
             <DemoFrame src={meta.demo} title={`${meta.title} — live demo`} heightClassName="h-[600px]" />
           </div>
         </section>
@@ -154,7 +154,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
             </p>
           )}
           {/* Breakout — same wider container as the primary demo above */}
-          <div className="lg:mx-[-7rem] xl:mx-[-12rem]">
+          <div className="lg:mx-[-5rem] xl:mx-[-12rem]">
             <DemoFrame
               src={meta.demo2.url}
               title={`${meta.title} — ${meta.demo2.label}`}

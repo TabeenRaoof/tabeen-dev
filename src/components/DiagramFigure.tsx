@@ -15,7 +15,7 @@ export function DiagramFigure({ diagram }: { diagram: Diagram }) {
   return (
     <section className="pb-8">
       <h2 className="font-serif text-2xl text-ink mb-4">Architecture</h2>
-      <figure className="lg:mx-[-7rem] xl:mx-[-12rem]">
+      <figure className="lg:mx-[-5rem] xl:mx-[-12rem]">
         <a
           href={diagram.src}
           target="_blank"

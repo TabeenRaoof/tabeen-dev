@@ -68,7 +68,7 @@ export default async function NotesPostPage({ params }: PageProps) {
   const { meta, body } = post;
 
   return (
-    <article className="max-w-2xl mx-auto px-6 sm:px-8">
+    <article className="max-w-article mx-auto px-6 sm:px-8">
       <header className="pt-12 pb-8">
         <Link
           href="/notes"
