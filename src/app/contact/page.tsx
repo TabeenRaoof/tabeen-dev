@@ -17,6 +17,7 @@ export default function ContactPage() {
       <section className="py-14">
         <h1 className="text-3xl sm:text-4xl text-ink mb-6">Contact</h1>
         <p className="text-sm text-muted leading-relaxed max-w-md mb-10">
+          <span className="text-ink">Available from the first week of January 2027.</span>{" "}
           The fastest way to reach me is by email. I&apos;m also active on
           GitHub and LinkedIn.
         </p>

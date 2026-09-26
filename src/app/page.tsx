@@ -72,7 +72,7 @@ export default function HomePage() {
       {/* ----------------------------------------------------------------- */}
       <section className="py-20 sm:py-24">
         <p className="text-sm text-muted mb-4 tracking-wide">
-          Tabeen Raoof — Bay Area
+          Tabeen Raoof — Bay Area · Available from January 2027
         </p>
         <h1 className="text-4xl sm:text-5xl text-ink mb-6 max-w-2xl">
           Engineer building{" "}
@@ -80,10 +80,12 @@ export default function HomePage() {
           — and making them work in production.
         </h1>
         <p className="text-base text-muted leading-relaxed max-w-xl mb-8">
-          MS Computer Science (AI/ML) at SFBU, graduating December 2026. I
-          build data pipelines and monitoring in production, computer-vision
-          research systems, and — before all that — spent three years
-          delivering enterprise software to customers.
+          At Xylo AI Studios, I own the services that bring financial-advisory
+          firms&apos; email, calendar, CRM and meeting data into one pipeline —
+          and built the monitoring that caught a live outage nobody had
+          noticed. Before that: computer-vision research, and three years
+          delivering enterprise software to customers. MS Computer Science
+          (AI/ML) at SFBU, graduating December 2026.
         </p>
         <div className="flex flex-wrap gap-4">
           <Link
@@ -105,6 +107,18 @@ export default function HomePage() {
               <polyline points="12 5 19 12 12 19" />
             </svg>
           </Link>
+          <a
+            href="/resume.pdf"
+            download="Tabeen_Raoof_Resume.pdf"
+            className="inline-flex items-center gap-1.5 text-sm text-muted px-4 py-3 hover:text-ink transition-colors"
+          >
+            Resume (PDF)
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+          </a>
           <Link
             href="/research"
             className="inline-flex items-center gap-1.5 text-sm text-muted px-4 py-3 hover:text-ink transition-colors"
@@ -121,9 +135,8 @@ export default function HomePage() {
       <section className="pb-12 border-t border-line pt-8">
         <p className="text-sm text-muted leading-relaxed">
           <span className="text-ink font-medium">Now — </span>
-          Building API integrations and AI agent workflows in Python at
-          Xylo AI Studios, running production features end-to-end through
-          a specification-first, agent-assisted development process.{" "}
+          Backend engineering at Xylo AI Studios, the ProofShape capstone, and
+          two preprints in preparation (TruPhoto and a VLM evaluation study).{" "}
           <span className="text-xs text-muted">(Last updated Sep 2026)</span>
         </p>
       </section>
