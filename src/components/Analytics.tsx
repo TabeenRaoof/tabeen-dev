@@ -10,6 +10,19 @@ import { useEffect, useRef } from "react";
 // only sent with the first (landing) page view; later views would otherwise
 // all be credited to the original referrer.
 
+// Set in the owner's own browsers by visiting /stats (see AnalyticsOptOut),
+// so their visits aren't counted from any network. Only ever written on
+// the owner's devices — visitors never get anything stored.
+export const ANALYTICS_OPT_OUT_KEY = "tabeen:analytics-opt-out";
+
+function isOptedOut(): boolean {
+  try {
+    return localStorage.getItem(ANALYTICS_OPT_OUT_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
 export function Analytics() {
   const pathname = usePathname();
   const lastTracked = useRef<string | null>(null);
@@ -21,7 +34,7 @@ export function Analytics() {
     lastTracked.current = pathname;
 
     const nav = navigator as Navigator & { globalPrivacyControl?: boolean };
-    if (nav.globalPrivacyControl || nav.doNotTrack === "1") return;
+    if (nav.globalPrivacyControl || nav.doNotTrack === "1" || isOptedOut()) return;
 
     const body = JSON.stringify({
       path: pathname,

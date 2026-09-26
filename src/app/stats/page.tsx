@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
-import { getAnalyticsEnv, isAuthorized, utcDay } from "@/lib/analytics";
+import {
+  getAnalyticsEnv,
+  ipInCidr,
+  isAuthorized,
+  networkForIp,
+  utcDay,
+  type D1Like,
+} from "@/lib/analytics";
+import { AnalyticsOptOut } from "@/components/AnalyticsOptOut";
 
 // Private analytics dashboard. Gated by HTTP Basic auth in src/middleware.ts;
 // re-checked here so the data never renders if the middleware is bypassed.
@@ -26,8 +34,8 @@ interface PageProps {
 
 export default async function StatsPage({ searchParams }: PageProps) {
   const { db, salt, statsPassword } = getAnalyticsEnv();
-  const authHeader = (await headers()).get("authorization");
-  if (!isAuthorized(authHeader, statsPassword)) {
+  const requestHeaders = await headers();
+  if (!isAuthorized(requestHeaders.get("authorization"), statsPassword)) {
     return <Shell>Not authorized.</Shell>;
   }
 
@@ -56,6 +64,8 @@ export default async function StatsPage({ searchParams }: PageProps) {
     topCounts(db, "referrer", since),
     topCounts(db, "country", since),
   ]);
+  const excluded = await loadExcludedNetworks(db);
+  const currentIp = requestHeaders.get("cf-connecting-ip");
 
   const rows = fillDays(daily.results, since, days);
   const totalViews = rows.reduce((sum, r) => sum + r.views, 0);
@@ -116,10 +126,13 @@ export default async function StatsPage({ searchParams }: PageProps) {
         />
       </div>
 
+      <OwnVisits currentIp={currentIp} excluded={excluded} />
+
       <p className="text-2xs text-muted pb-16 max-w-lg leading-relaxed">
         Visitors are counted with a hash that changes every day, so the same person is
         counted once per day they visit and can&apos;t be followed across days. Bots,
-        Do Not Track / Global Privacy Control browsers, and this page are not counted.
+        cloud-hosted traffic, Do Not Track / Global Privacy Control browsers, your
+        excluded browsers and networks, and this page are not counted.
       </p>
     </div>
   );
@@ -333,6 +346,118 @@ function RankedList({
           </tbody>
         </table>
       )}
+    </section>
+  );
+}
+
+type ExcludedNetwork = { cidr: string; label: string | null; created_at: number };
+
+// Null when the table doesn't exist yet (migration 0002 not applied).
+async function loadExcludedNetworks(db: D1Like): Promise<ExcludedNetwork[] | null> {
+  try {
+    const { results } = await db
+      .prepare("SELECT cidr, label, created_at FROM excluded_networks ORDER BY created_at DESC")
+      .all<ExcludedNetwork>();
+    return results;
+  } catch {
+    return null;
+  }
+}
+
+function OwnVisits({
+  currentIp,
+  excluded,
+}: {
+  currentIp: string | null;
+  excluded: ExcludedNetwork[] | null;
+}) {
+  const currentNetwork = currentIp ? networkForIp(currentIp) : null;
+  const match =
+    currentIp && excluded ? excluded.find((n) => ipInCidr(currentIp, n.cidr)) : undefined;
+
+  return (
+    <section className="py-12 border-t border-line">
+      <h2 className="font-serif text-xl text-ink mb-4">Your own visits</h2>
+      <div className="flex flex-col gap-6 max-w-lg">
+        <AnalyticsOptOut />
+
+        {excluded === null ? (
+          <p className="text-sm text-muted">
+            Network exclusion isn&apos;t set up yet — apply{" "}
+            <code className="text-xs">migrations/0002_excluded_networks.sql</code> (see README →
+            Analytics).
+          </p>
+        ) : !currentNetwork ? (
+          <p className="text-sm text-muted">
+            Couldn&apos;t detect this network&apos;s address (expected in local development).
+          </p>
+        ) : match ? (
+          <p className="text-sm text-muted">
+            <span className="text-ink">This network is excluded</span>
+            {match.label ? ` (${match.label})` : ""} — no device on it is counted.
+          </p>
+        ) : (
+          <form method="post" action="/stats/networks" className="flex flex-col gap-3">
+            <p className="text-sm text-muted">
+              <span className="text-ink">This network is being counted.</span> If it&apos;s your
+              home Wi-Fi, exclude it and no device on it will be counted.
+            </p>
+            <input type="hidden" name="action" value="add" />
+            <div className="flex flex-wrap gap-2">
+              <label htmlFor="network-label" className="sr-only">
+                Label for this network
+              </label>
+              <input
+                id="network-label"
+                name="label"
+                maxLength={60}
+                placeholder="Label, e.g. Home Wi-Fi"
+                className="flex-1 min-w-0 text-sm bg-bg text-ink placeholder:text-muted border border-line rounded-md px-3 py-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+              />
+              <button
+                type="submit"
+                className="text-sm text-ink px-4 py-3 border border-ink rounded-md hover:bg-surface transition-colors"
+              >
+                Exclude this network
+              </button>
+            </div>
+            <p className="text-2xs text-muted">Excludes {currentNetwork}</p>
+          </form>
+        )}
+
+        {excluded && excluded.length > 0 && (
+          <div>
+            <p className="text-xs text-muted mb-1">Excluded networks</p>
+            <ul>
+              {excluded.map((n) => (
+                <li
+                  key={n.cidr}
+                  className="flex justify-between items-center gap-4 border-b border-line last:border-b-0"
+                >
+                  <div className="min-w-0 py-2">
+                    <p className="text-sm text-ink truncate">{n.label ?? "Unlabelled"}</p>
+                    <p className="text-2xs text-muted truncate">{n.cidr}</p>
+                  </div>
+                  <form method="post" action="/stats/networks">
+                    <input type="hidden" name="action" value="remove" />
+                    <input type="hidden" name="cidr" value={n.cidr} />
+                    <button
+                      type="submit"
+                      className="text-xs text-muted hover:text-ink px-3 py-3 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </form>
+                </li>
+              ))}
+            </ul>
+            <p className="text-2xs text-muted mt-2 leading-relaxed">
+              Home internet addresses change occasionally. If this page says your home network
+              is being counted again, exclude it again and remove the old entry.
+            </p>
+          </div>
+        )}
+      </div>
     </section>
   );
 }

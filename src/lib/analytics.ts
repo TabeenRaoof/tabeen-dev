@@ -119,6 +119,97 @@ export async function visitorHash(
   ).join("");
 }
 
+// ---------------------------------------------------------------------------
+// Excluding the owner's own network (see README → Analytics).
+//
+// The owner adds their current network from /stats; the tracker then skips
+// any visit from it. IPv4 addresses are excluded exactly (/32). IPv6 is
+// excluded by /64, because every device on a home LAN shares the same /64
+// while each device's own address (and its privacy addresses) differ.
+// ---------------------------------------------------------------------------
+
+type ParsedIp = { version: 4 | 6; value: bigint };
+
+function parseIp(ip: string): ParsedIp | null {
+  if (ip.includes(".") && !ip.includes(":")) {
+    const parts = ip.split(".");
+    if (parts.length !== 4) return null;
+    let value = 0n;
+    for (const p of parts) {
+      if (!/^\d{1,3}$/.test(p) || Number(p) > 255) return null;
+      value = (value << 8n) + BigInt(p);
+    }
+    return { version: 4, value };
+  }
+  // IPv6. Embedded-IPv4 forms (::ffff:1.2.3.4) are rejected: Cloudflare
+  // reports IPv4 clients as plain IPv4, so they don't need matching here.
+  const addr = ip.split("%")[0];
+  if (addr.includes(".")) return null;
+  const halves = addr.split("::");
+  if (halves.length > 2) return null;
+  const head = halves[0] ? halves[0].split(":") : [];
+  const tail = halves.length === 2 && halves[1] ? halves[1].split(":") : [];
+  if (halves.length === 2 && head.length + tail.length > 7) return null;
+  const groups =
+    halves.length === 2
+      ? [...head, ...Array(8 - head.length - tail.length).fill("0"), ...tail]
+      : head;
+  if (groups.length !== 8) return null;
+  let value = 0n;
+  for (const g of groups) {
+    if (!/^[0-9a-f]{1,4}$/i.test(g)) return null;
+    value = (value << 16n) + BigInt(parseInt(g, 16));
+  }
+  return { version: 6, value };
+}
+
+export function ipInCidr(ip: string, cidr: string): boolean {
+  const [netAddr, lenStr] = cidr.split("/");
+  const a = parseIp(ip);
+  const n = parseIp(netAddr ?? "");
+  if (!a || !n || a.version !== n.version) return false;
+  const bits = a.version === 4 ? 32 : 128;
+  const len = Number(lenStr);
+  if (!Number.isInteger(len) || len < 0 || len > bits) return false;
+  const shift = BigInt(bits - len);
+  return a.value >> shift === n.value >> shift;
+}
+
+// The network to exclude for a given client IP: the address itself for
+// IPv4, its /64 for IPv6. Null for anything unparseable (e.g. local dev).
+export function networkForIp(ip: string): string | null {
+  const parsed = parseIp(ip);
+  if (!parsed) return null;
+  if (parsed.version === 4) return `${ip}/32`;
+  const top = parsed.value >> 64n;
+  const groups = [48n, 32n, 16n, 0n].map((s) => ((top >> s) & 0xffffn).toString(16));
+  return `${groups.join(":")}::/64`;
+}
+
+let excludedCache: { at: number; cidrs: string[] } | null = null;
+
+// Cached per edge isolate for 60s so the tracker doesn't query D1 for the
+// exclusion list on every page view. Fails open: if the table doesn't exist
+// yet (migration 0002 not applied), nothing is excluded and tracking still works.
+export async function isExcludedIp(db: D1Like, ip: string): Promise<boolean> {
+  if (!parseIp(ip)) return false;
+  if (!excludedCache || Date.now() - excludedCache.at > 60_000) {
+    try {
+      const { results } = await db
+        .prepare("SELECT cidr FROM excluded_networks")
+        .all<{ cidr: string }>();
+      excludedCache = { at: Date.now(), cidrs: results.map((r) => r.cidr) };
+    } catch {
+      return false;
+    }
+  }
+  return excludedCache.cidrs.some((cidr) => ipInCidr(ip, cidr));
+}
+
+export function invalidateExcludedCache() {
+  excludedCache = null;
+}
+
 // Accepts any username; checks the password from an HTTP Basic auth header.
 export function isAuthorized(authHeader: string | null, password: string | undefined): boolean {
   if (!password || !authHeader?.startsWith("Basic ")) return false;
