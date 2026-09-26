@@ -2,6 +2,7 @@ import {
   getAnalyticsEnv,
   getRequestOrg,
   isBot,
+  isExcludedIp,
   isHostingProvider,
   isTrackablePath,
   utcDay,
@@ -50,6 +51,8 @@ export async function POST(request: Request) {
   const countryHeader = request.headers.get("cf-ipcountry");
   const country = countryHeader && /^[A-Z0-9]{2}$/.test(countryHeader) ? countryHeader : null;
   const ip = request.headers.get("cf-connecting-ip") ?? "local";
+  // The owner's own network(s), added from /stats.
+  if (await isExcludedIp(db, ip)) return NO_CONTENT();
 
   const now = new Date();
   const day = utcDay(now);

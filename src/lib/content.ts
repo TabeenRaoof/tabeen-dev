@@ -67,6 +67,10 @@ export interface ContentMeta {
   };
   /** Set true to feature on the home page (only the most recent featured item shows) */
   featured?: boolean;
+  /** Display position on its index page (1 = first). Items without one
+   *  follow, newest first. Lets the most relevant work lead instead of
+   *  whatever happens to have the latest date. */
+  order?: number;
   /** Status badge — "Active", "In progress", "Archived", etc. */
   status?: string;
   /** Optional custom OG image — if absent, one is auto-generated */
@@ -119,8 +123,11 @@ export function getAllContent(category: string): ContentItem[] {
     };
   });
 
-  // Sort by date descending — most recent work shows first
+  // Explicit `order` first, then date descending — most recent first
   return items.sort((a, b) => {
+    const orderA = a.meta.order ?? Infinity;
+    const orderB = b.meta.order ?? Infinity;
+    if (orderA !== orderB) return orderA - orderB;
     return new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime();
   });
 }
@@ -164,8 +171,11 @@ export function getFeaturedItem(category: string): ContentItem | null {
  */
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
+  // "2026-06-01" parses as UTC midnight; without timeZone: "UTC" it would be
+  // displayed in the build machine's zone, where it's May 31 in the Americas.
   return date.toLocaleDateString("en-US", {
     month: "short",
     year: "numeric",
+    timeZone: "UTC",
   });
 }

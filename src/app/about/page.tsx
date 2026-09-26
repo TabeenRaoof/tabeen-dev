@@ -11,7 +11,93 @@ export const metadata: Metadata = {
 // About page is hand-written rather than MDX-driven — there's only one,
 // and it deserves a custom layout. Edit this file directly to update.
 //
-// Structure: short bio → experience timeline → resume download.
+// Structure: short bio → experience → education → now → resume download.
+
+interface TimelineEntry {
+  org: string;
+  role: string;
+  dates?: string;
+  /** One line of concrete impact — from the résumé, not paraphrased up. */
+  impact?: string;
+}
+
+const EXPERIENCE: TimelineEntry[] = [
+  {
+    org: "Xylo AI Studios",
+    role: "Forward Deployed / Backend Engineer Intern",
+    dates: "Jun 2026 — present",
+    impact:
+      "Own the ingestion and data-extraction services for a communications platform serving financial-advisory firms; built the coverage monitoring that surfaced a live production outage.",
+  },
+  {
+    org: "FiPet",
+    role: "Software Engineer Intern",
+    dates: "Feb 2026 — Jun 2026",
+    impact:
+      "Built and deployed production features in TypeScript, extending native application capabilities, with end-to-end validation before every pull request.",
+  },
+  {
+    org: "Yardi Systems",
+    role: "Technical Account Manager",
+    dates: "Jul 2022 — Aug 2025",
+    impact:
+      "Owned end-to-end delivery for roughly 20 enterprise real estate clients — discovery, solution design, configuration, data conversion and go-live.",
+  },
+  {
+    org: "Aviso Wealth",
+    role: "New Account Administrator",
+    dates: "Dec 2020 — Jul 2022",
+    impact:
+      "Maintained account indexing pipelines and audited electronic fund transfer pathways in a regulated environment.",
+  },
+  {
+    org: "United Nations (UNHCR & UNDP)",
+    role: "Field Associate / Project Officer",
+    dates: "Jun 2014 — Jan 2019",
+    impact:
+      "Led up to three concurrent humanitarian cash-for-work infrastructure projects for over 3,000 workers; built a cloud-based reporting system that replaced siloed spreadsheets across agency offices.",
+  },
+];
+
+const EDUCATION: TimelineEntry[] = [
+  {
+    org: "San Francisco Bay University",
+    role: "MS Computer Science (AI/ML)",
+    dates: "Aug 2025 — Dec 2026",
+    impact:
+      "GPA 3.63. Research in image authenticity (TruPhoto) and VLM evaluation on edge hardware; ProofShape capstone.",
+  },
+  {
+    org: "University Canada West",
+    role: "MBA, Strategic Management & Marketing",
+    dates: "Jan 2019 — Jul 2020",
+  },
+  {
+    org: "American University of Iraq, Sulaimani",
+    role: "B.B.A., Minor in Economics",
+  },
+];
+
+function Timeline({ entries }: { entries: TimelineEntry[] }) {
+  return (
+    <div className="flex flex-col gap-6">
+      {entries.map((e) => (
+        <div key={e.org}>
+          <div className="flex justify-between items-baseline gap-4">
+            <p className="text-sm text-ink font-medium">{e.org}</p>
+            {e.dates && (
+              <span className="text-xs text-muted whitespace-nowrap">{e.dates}</span>
+            )}
+          </div>
+          <p className="text-xs text-muted">{e.role}</p>
+          {e.impact && (
+            <p className="text-sm text-muted leading-relaxed mt-1.5">{e.impact}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function AboutPage() {
   return (
@@ -47,62 +133,20 @@ export default function AboutPage() {
 
       <section className="pb-12 border-t border-line pt-10">
         <h2 className="font-serif text-2xl text-ink mb-6">Experience</h2>
-        <div className="flex flex-col gap-5">
-          <div className="flex justify-between items-baseline gap-4">
-            <div className="flex-1">
-              <p className="text-sm text-ink font-medium">Xylo AI Studios</p>
-              <p className="text-xs text-muted">Forward Deployed / Backend Engineer Intern</p>
-            </div>
-            <span className="text-xs text-muted whitespace-nowrap">Jun 2026 — present</span>
-          </div>
-          <div className="flex justify-between items-baseline gap-4">
-            <div className="flex-1">
-              <p className="text-sm text-ink font-medium">FiPet</p>
-              <p className="text-xs text-muted">Software Engineer Intern</p>
-            </div>
-            <span className="text-xs text-muted whitespace-nowrap">Feb 2026 — Jun 2026</span>
-          </div>
-          <div className="flex justify-between items-baseline gap-4">
-            <div className="flex-1">
-              <p className="text-sm text-ink font-medium">SFBU</p>
-              <p className="text-xs text-muted">MS Computer Science (AI/ML)</p>
-            </div>
-            <span className="text-xs text-muted whitespace-nowrap">Aug 2025 — Dec 2026</span>
-          </div>
-          <div className="flex justify-between items-baseline gap-4">
-            <div className="flex-1">
-              <p className="text-sm text-ink font-medium">Yardi Systems</p>
-              <p className="text-xs text-muted">Technical Account Manager</p>
-            </div>
-            <span className="text-xs text-muted whitespace-nowrap">Jul 2022 — Aug 2025</span>
-          </div>
-          <div className="flex justify-between items-baseline gap-4">
-            <div className="flex-1">
-              <p className="text-sm text-ink font-medium">Aviso Wealth</p>
-              <p className="text-xs text-muted">New Account Administrator</p>
-            </div>
-            <span className="text-xs text-muted whitespace-nowrap">Dec 2020 — Jul 2022</span>
-          </div>
-          <div className="flex justify-between items-baseline gap-4">
-            <div className="flex-1">
-              <p className="text-sm text-ink font-medium">United Nations (UNHCR &amp; UNDP)</p>
-              <p className="text-xs text-muted">
-                Field Associate / Project Officer — humanitarian infrastructure
-                programmes
-              </p>
-            </div>
-            <span className="text-xs text-muted whitespace-nowrap">Jun 2014 — Jan 2019</span>
-          </div>
-        </div>
+        <Timeline entries={EXPERIENCE} />
+      </section>
+
+      <section className="pb-12 border-t border-line pt-10">
+        <h2 className="font-serif text-2xl text-ink mb-6">Education</h2>
+        <Timeline entries={EDUCATION} />
       </section>
 
       <section className="pb-12 border-t border-line pt-10">
         <p className="text-sm text-muted leading-relaxed">
           <span className="text-ink font-medium">Now — </span>
-          Building API integrations and AI agent workflows in Python at an
-          early-stage AI studio (Xylo AI Studios), running production
-          features end-to-end through a specification-first,
-          agent-assisted development process.{" "}
+          Backend engineering at Xylo AI Studios, the ProofShape capstone, and
+          two preprints in preparation (TruPhoto and a VLM evaluation study).
+          Available from the first week of January 2027.{" "}
           <span className="text-xs text-muted">(Last updated Sep 2026)</span>
         </p>
       </section>

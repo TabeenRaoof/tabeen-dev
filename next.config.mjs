@@ -31,11 +31,6 @@ const nextConfig = {
         destination: "/research/truphoto",
         permanent: true,
       },
-      {
-        source: "/ml/fake-job-detector",
-        destination: "/work/fake-job-detector",
-        permanent: true,
-      },
       { source: "/ml", destination: "/research", permanent: true },
       { source: "/ml/:slug*", destination: "/research/:slug*", permanent: true },
 

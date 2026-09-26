@@ -273,9 +273,10 @@ a SQLite database included with Cloudflare Pages.
    repo (production reads the binding from the dashboard, not a committed
    config file); just keep the terminal output for step 2.
 
-2. **Apply the schema to the real database:**
+2. **Apply the schema to the real database** (each file once, in order):
    ```bash
    npx wrangler d1 execute tabeen-analytics --remote --file=migrations/0001_init.sql
+   npx wrangler d1 execute tabeen-analytics --remote --file=migrations/0002_excluded_networks.sql
    ```
 
 3. **Bind it to the Pages project:** Cloudflare Pages dashboard → your
@@ -294,6 +295,32 @@ a SQLite database included with Cloudflare Pages.
 
 6. Visit `https://tabeen.dev/stats` and sign in with any username and the
    `STATS_PASSWORD` you set.
+
+### Excluding your own visits
+
+Two independent mechanisms, both managed from `/stats`:
+
+- **Your browsers, on any network.** Opening `/stats` in a browser stores a
+  flag in that browser's local storage (`tabeen:analytics-opt-out`), and the
+  tracker never sends a beacon from it again. Open `/stats` once in each
+  browser on each device. Private/incognito windows start without the flag
+  and are counted.
+- **Your home network, any device.** `/stats` shows whether the network
+  you're on is counted, with an "Exclude this network" button. It stores the
+  network in the `excluded_networks` table — the exact address for IPv4, or
+  the `/64` for IPv6 (every device on a home LAN shares it, so this covers
+  phones, laptops, and guests). The tracker skips any visit from an excluded
+  network. The button only ever excludes the network the request came from;
+  nothing can be typed in.
+
+Home internet addresses change occasionally. When `/stats` shows your home
+network as counted again, exclude it again and remove the stale entry. If
+your home has both IPv4 and IPv6, a device may use either; if a second
+device's `/stats` shows a different address, exclude that one too.
+Changes reach the tracker within about a minute (it caches the list).
+
+Visits recorded before a browser or network was excluded stay in the data —
+visitor hashes can't be traced back to a person, by design.
 
 ### Local development
 

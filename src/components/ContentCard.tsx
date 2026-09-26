@@ -27,10 +27,9 @@ interface ContentCardProps {
 
 export function ContentCard({ href, item }: ContentCardProps) {
   const { meta } = item;
-  const isWIP =
-    meta.status?.toLowerCase().includes("progress") ||
-    meta.status?.toLowerCase() === "wip";
 
+  // Strip each part's own trailing period before joining, or descriptions
+  // that end in "." produce "firms.. Jun 2026".
   const accessibleName = [
     meta.title,
     meta.subtitle,
@@ -39,15 +38,16 @@ export function ContentCard({ href, item }: ContentCardProps) {
     formatDate(meta.date),
   ]
     .filter(Boolean)
+    .map((part) => part!.replace(/\.$/, ""))
     .join(". ");
 
+  // In-progress cards used to render at 60% opacity; as the first card on
+  // /work that read as disabled. The "In progress" badge carries the status.
   return (
     <Link
       href={href}
       aria-label={accessibleName}
-      className={`block bg-bg border border-line rounded-lg p-6 hover:border-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 transition-colors group ${
-        isWIP ? "opacity-60 hover:opacity-100" : ""
-      }`}
+      className="block bg-bg border border-line rounded-lg p-6 hover:border-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 transition-colors group"
     >
       <div className="flex flex-wrap gap-1.5 mb-2.5" aria-hidden="true">
         {meta.status && <Badge variant="status">{meta.status}</Badge>}
