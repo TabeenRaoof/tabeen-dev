@@ -186,7 +186,7 @@ export default function HomePage() {
                 className="py-4 border-b border-line last:border-b-0 group flex justify-between items-baseline gap-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
               >
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-serif text-lg text-ink group-hover:text-accent transition-colors mb-1">
+                  <h3 className="font-serif text-xl text-ink group-hover:text-accent transition-colors mb-1">
                     {post.meta.title}
                   </h3>
                   <p className="text-sm text-muted line-clamp-1">

@@ -59,8 +59,19 @@
      into two undocumented one-off values (text-[10px] and text-[11px]) used
      inconsistently across Work and Research. --text-2xs replaces both with
      a single named token, generating the `text-2xs` utility. */
-  --text-2xs: 0.6875rem; /* 11px */
-  --text-2xs--line-height: 1rem;
+  --text-2xs: 0.875rem; /* 14px */
+  --text-2xs--line-height: 1.35;
+
+  /* Readability pass: body and small text scaled up ~20-29% from Tailwind's
+     defaults (in parentheses). text-lg / text-xl — card and section titles —
+     go up a little too so they stay visibly larger than the body text next
+     to them. 2xl and above (page titles, the hero headline) are unchanged.
+     Line heights are Tailwind's unitless ratios, so they scale with size. */
+  --text-xs: 0.9375rem;   /* 15px (12px) */
+  --text-sm: 1.0625rem;   /* 17px (14px) */
+  --text-base: 1.2rem;    /* 19.2px (16px) */
+  --text-lg: 1.3125rem;   /* 21px (18px) */
+  --text-xl: 1.4375rem;   /* 23px (20px) */
 
   /* Spacing scale — Tailwind's default 0.25rem-based scale (gap-1.5, px-2.5,
      etc.) is used consistently throughout; no one-off spacing values were
@@ -126,8 +137,11 @@ h1, h2, h3, h4 {
 /* ----------------------------------------------------------------- */
 
 .prose {
-  font-size: 16px;
-  line-height: 1.75;
+  font-size: var(--text-base);
+  line-height: 1.7;
+  /* Lets long unbroken strings (URLs as link text) wrap instead of
+     pushing the page wider than a narrow phone screen. */
+  overflow-wrap: break-word;
   color: var(--color-ink);
 }
 
@@ -142,7 +156,8 @@ h1, h2, h3, h4 {
 }
 
 .prose h3 {
-  font-size: 1.25rem;
+  /* Was 1.25rem (20px) — now just above the 19.2px body, so bumped to 22px. */
+  font-size: 1.375rem;
   margin-top: 2rem;
   margin-bottom: 0.75rem;
 }

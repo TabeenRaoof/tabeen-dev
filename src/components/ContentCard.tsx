@@ -54,7 +54,7 @@ export function ContentCard({ href, item }: ContentCardProps) {
         {meta.tags?.[0] && <Badge variant="topic">{meta.tags[0]}</Badge>}
       </div>
 
-      <h2 className="font-serif text-lg text-ink mb-1 group-hover:text-accent transition-colors">
+      <h2 className="font-serif text-xl text-ink mb-1 group-hover:text-accent transition-colors">
         {meta.title}
       </h2>
 
