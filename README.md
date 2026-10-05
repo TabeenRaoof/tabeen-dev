@@ -252,7 +252,10 @@ a SQLite database included with Cloudflare Pages.
 - `src/components/Analytics.tsx` sends one `navigator.sendBeacon` per page
   view to `/api/track` (`src/app/api/track/route.ts`), which writes a row
   to D1: the path, the external referrer's hostname (if any), the visitor's
-  country (from Cloudflare's `CF-IPCountry` header), and a *visitor hash*.
+  country, region and city (from Cloudflare's free geolocation — no IP
+  storage required), a coarse device/browser/OS classification derived from
+  the user agent at ingest time (never the raw user-agent string itself —
+  see `parseUserAgent` in `src/lib/analytics.ts`), and a *visitor hash*.
 - The visitor hash is `SHA-256(salt, today's date, IP, user agent)`,
   truncated to 16 hex characters. Because the date is part of the input,
   the same person hashes to a completely different value tomorrow — so
@@ -263,10 +266,16 @@ a SQLite database included with Cloudflare Pages.
   tracked. Browsers sending `Do Not Track` or the Global Privacy Control
   signal are skipped client-side.
 - `/stats` (`src/app/stats/page.tsx`) is the dashboard: total views/visitors,
-  a daily chart with a table-view fallback, and top pages/referrers/countries.
-  It's gated by HTTP Basic auth (any username, one shared password) in
-  `src/middleware.ts`, and fails closed — if the password isn't configured,
-  the page 503s instead of being public.
+  a daily chart with a table-view fallback, and top pages/referrers/
+  countries/regions/cities/devices/browsers/OSes. It's gated by HTTP Basic
+  auth (any username, one shared password) in `src/middleware.ts`, and
+  fails closed — if the password isn't configured, the page 503s instead
+  of being public.
+- City-level location is detailed enough that a single visitor from a small
+  city is effectively identifiable on a low-traffic site — `/stats` says
+  so right above the Cities panel. That's a deliberate trade-off, not an
+  oversight; remove the `city` column (migration) and its `RankedList` in
+  `src/app/stats/page.tsx` if you'd rather not have it.
 
 ### One-time setup (Cloudflare dashboard — can't be done from the CLI/repo)
 
@@ -282,6 +291,7 @@ a SQLite database included with Cloudflare Pages.
    ```bash
    npx wrangler d1 execute tabeen-analytics --remote --file=migrations/0001_init.sql
    npx wrangler d1 execute tabeen-analytics --remote --file=migrations/0002_excluded_networks.sql
+   npx wrangler d1 execute tabeen-analytics --remote --file=migrations/0003_visitor_detail.sql
    ```
 
 3. **Bind it to the Pages project:** Cloudflare Pages dashboard → your

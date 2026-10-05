@@ -53,17 +53,23 @@ export default async function StatsPage({ searchParams }: PageProps) {
   }
 
   const since = utcDay(new Date(Date.now() - (days - 1) * DAY_MS));
-  const [daily, pages, referrers, countries] = await Promise.all([
-    db
-      .prepare(
-        "SELECT day, COUNT(*) AS views, COUNT(DISTINCT visitor) AS visitors FROM pageviews WHERE day >= ? GROUP BY day",
-      )
-      .bind(since)
-      .all<DailyRow>(),
-    topCounts(db, "path", since),
-    topCounts(db, "referrer", since),
-    topCounts(db, "country", since),
-  ]);
+  const [daily, pages, referrers, countries, regions, cities, devices, browsers, systems] =
+    await Promise.all([
+      db
+        .prepare(
+          "SELECT day, COUNT(*) AS views, COUNT(DISTINCT visitor) AS visitors FROM pageviews WHERE day >= ? GROUP BY day",
+        )
+        .bind(since)
+        .all<DailyRow>(),
+      topCounts(db, "path", since),
+      topCounts(db, "referrer", since),
+      topCounts(db, "country", since),
+      topCounts(db, "region", since),
+      topCounts(db, "city", since),
+      topCounts(db, "device", since),
+      topCounts(db, "browser", since),
+      topCounts(db, "os", since),
+    ]);
   const excluded = await loadExcludedNetworks(db);
   const currentIp = requestHeaders.get("cf-connecting-ip");
 
@@ -110,7 +116,7 @@ export default async function StatsPage({ searchParams }: PageProps) {
 
       <DailyChart rows={rows} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-12 py-12 border-t border-line">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-12 py-12 border-t border-line">
         <RankedList title="Top pages" column="Page" rows={pages} empty="No page views yet." />
         <RankedList
           title="Referrers"
@@ -124,6 +130,27 @@ export default async function StatsPage({ searchParams }: PageProps) {
           rows={countries.map((r) => ({ ...r, name: countryName(r.name) }))}
           empty="No country data yet."
         />
+        <RankedList title="Regions" column="Region" rows={regions} empty="No region data yet." />
+        <RankedList
+          title="Cities"
+          column="City"
+          rows={cities}
+          empty="No city data yet."
+          note="A single visitor from a small city is identifiable at this level."
+        />
+        <RankedList
+          title="Devices"
+          column="Device"
+          rows={devices.map((r) => ({ ...r, name: capitalize(r.name) }))}
+          empty="No device data yet."
+        />
+        <RankedList
+          title="Browsers"
+          column="Browser"
+          rows={browsers}
+          empty="No browser data yet."
+        />
+        <RankedList title="OS" column="Operating system" rows={systems} empty="No OS data yet." />
       </div>
 
       <OwnVisits currentIp={currentIp} excluded={excluded} />
@@ -140,7 +167,7 @@ export default async function StatsPage({ searchParams }: PageProps) {
 
 async function topCounts(
   db: NonNullable<ReturnType<typeof getAnalyticsEnv>["db"]>,
-  column: "path" | "referrer" | "country",
+  column: "path" | "referrer" | "country" | "region" | "city" | "device" | "browser" | "os",
   since: string,
 ): Promise<CountRow[]> {
   // `column` comes only from the literal union above, never from user input.
@@ -178,6 +205,10 @@ function formatDay(day: string): string {
     day: "numeric",
     timeZone: "UTC",
   });
+}
+
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 function countryName(code: string): string {
@@ -301,16 +332,19 @@ function RankedList({
   column,
   rows,
   empty,
+  note,
 }: {
   title: string;
   column: string;
   rows: CountRow[];
   empty: string;
+  note?: string;
 }) {
   const max = rows[0]?.views ?? 0;
   return (
     <section>
-      <h2 className="font-serif text-xl text-ink mb-3">{title}</h2>
+      <h2 className={`font-serif text-xl text-ink ${note ? "mb-1" : "mb-3"}`}>{title}</h2>
+      {note && <p className="text-2xs text-muted mb-2.5">{note}</p>}
       {rows.length === 0 ? (
         <p className="text-sm text-muted">{empty}</p>
       ) : (

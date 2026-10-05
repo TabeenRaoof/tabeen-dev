@@ -27,19 +27,33 @@ export function getAnalyticsEnv() {
   };
 }
 
-// A deliberately minimal local type for the one Cloudflare request.cf field
-// this needs, passed as the generic to getOptionalRequestContext() instead
-// of relying on its default IncomingRequestCfProperties type — that type
-// comes from @cloudflare/workers-types, which isn't a dependency of this
-// project (next-on-pages only references it in its own .d.ts files, guarded
-// by tsconfig's skipLibCheck). Declaring the one field used here avoids
-// depending on a package that isn't actually installed.
-interface CfHostingProps extends Record<string, unknown> {
+// A deliberately minimal local type for the handful of Cloudflare request.cf
+// fields this needs, passed as the generic to getOptionalRequestContext()
+// instead of relying on its default IncomingRequestCfProperties type — that
+// type comes from @cloudflare/workers-types, which isn't a dependency of
+// this project (next-on-pages only references it in its own .d.ts files,
+// guarded by tsconfig's skipLibCheck). Declaring just the fields used here
+// avoids depending on a package that isn't actually installed.
+interface CfRequestProps extends Record<string, unknown> {
   asOrganization?: string;
+  region?: string;
+  city?: string;
+}
+
+function getCf(): CfRequestProps | undefined {
+  return getOptionalRequestContext<CfRequestProps>()?.cf;
 }
 
 export function getRequestOrg(): string | undefined {
-  return getOptionalRequestContext<CfHostingProps>()?.cf?.asOrganization;
+  return getCf()?.asOrganization;
+}
+
+// Cloudflare's free geolocation — derived from the request at the edge, no
+// IP storage required to get it. Region is a full name ("California"), not
+// a US-centric code, since Cloudflare reports it that way worldwide.
+export function getRequestGeo(): { region: string | null; city: string | null } {
+  const cf = getCf();
+  return { region: cf?.region ?? null, city: cf?.city ?? null };
 }
 
 // Substrings of `cf.asOrganization` (Cloudflare's free, no-binding-required
@@ -101,6 +115,40 @@ const BOT_PATTERN =
 
 export function isBot(userAgent: string): boolean {
   return userAgent === "" || BOT_PATTERN.test(userAgent);
+}
+
+export interface UserAgentInfo {
+  device: "desktop" | "mobile" | "tablet";
+  browser: "Chrome" | "Safari" | "Firefox" | "Edge" | "Other";
+  os: "macOS" | "Windows" | "iOS" | "Android" | "Linux" | "Other";
+}
+
+// Coarse, fixed-category classification only — the raw user-agent string is
+// never stored, just whichever of these handful of buckets it falls into.
+// Order matters: Edge and Android UAs both contain "Chrome"/"Linux", so the
+// more specific check has to run first.
+export function parseUserAgent(ua: string): UserAgentInfo {
+  const isTablet = /iPad|Tablet/i.test(ua) || (/Android/i.test(ua) && !/Mobile/i.test(ua));
+  const isMobile = !isTablet && /Mobi|iPhone|Android/i.test(ua);
+
+  let browser: UserAgentInfo["browser"] = "Other";
+  if (/Edg\//i.test(ua)) browser = "Edge";
+  else if (/Chrome|CriOS/i.test(ua)) browser = "Chrome";
+  else if (/Firefox|FxiOS/i.test(ua)) browser = "Firefox";
+  else if (/Safari/i.test(ua)) browser = "Safari";
+
+  let os: UserAgentInfo["os"] = "Other";
+  if (/Android/i.test(ua)) os = "Android";
+  else if (/iPhone|iPad|iPod/i.test(ua)) os = "iOS";
+  else if (/Mac OS X/i.test(ua)) os = "macOS";
+  else if (/Windows/i.test(ua)) os = "Windows";
+  else if (/Linux/i.test(ua)) os = "Linux";
+
+  return {
+    device: isTablet ? "tablet" : isMobile ? "mobile" : "desktop",
+    browser,
+    os,
+  };
 }
 
 // Truncated SHA-256 of (secret salt, day, IP, UA). The day in the input means
