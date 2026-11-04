@@ -136,7 +136,7 @@ export default function HomePage() {
         <p className="text-sm text-muted leading-relaxed">
           <span className="text-ink font-medium">Now — </span>
           Backend engineering at Xylo AI Studios, the ProofShape capstone, and
-          two preprints in preparation (TruPhoto and a VLM evaluation study).{" "}
+          the TruPhoto preprint (my VLM edge-deployment study is now published on Zenodo).{" "}
           <span className="text-xs text-muted">(Last updated Sep 2026)</span>
         </p>
       </section>

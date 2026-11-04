@@ -1,27 +1,45 @@
 ---
 title: "VLM Relational Reasoning Across a Compute Spectrum"
-description: "A pre-registered evaluation of relational and spatial reasoning in vision-language models across a compute spectrum, from cloud API down to an 8GB NVIDIA Jetson edge device."
+description: "A pre-registered study of which spatial reasoning survives smaller vision-language models and edge deployment — Qwen2.5-VL 3B/7B and Gemini-2.5-Flash, down to an 8GB NVIDIA Jetson."
 date: "2026-06-01"
 tags: ["Vision-language models"]
 stack: ["Python", "PyTorch", "Jetson", "Ollama", "Gemini API"]
+github: "https://github.com/TabeenRaoof/vlm-relational-reasoning"
 research:
   summary: "Preprint available on Zenodo."
   paper: "https://zenodo.org/records/23117197"
-status: "In progress"
+status: "Preprint"
 ---
 
 ## What the study asks
 
-Vision-language models are increasingly evaluated on benchmark leaderboards run against large cloud-hosted checkpoints. This study asks a narrower, more practical question: how does relational and spatial reasoning performance hold up as you move the same class of model down a compute spectrum — from a cloud API, to a local workstation GPU, to an 8GB NVIDIA Jetson edge device? That question matters for anyone deciding whether a VLM-based reasoning task can actually run at the edge rather than only in a demo.
+Vision-language models are increasingly deployed at smaller parameter scales and on edge hardware with constrained memory, but which kinds of spatial reasoning survive those reductions isn't well characterized — and while it's widely reported that edge deployment degrades accuracy, there are few direct measurements. This study asks two practical questions: when a model gets smaller, which spatial relations does it lose? And when the same model moves onto an 8GB edge device, what actually breaks?
 
 **Publication status:** Preprint available on [Zenodo](https://zenodo.org/records/23117197).
+
+## Methodology
+
+- **Models:** Qwen2.5-VL at two scales (3B and 7B), plus Gemini-2.5-Flash.
+- **Benchmark:** Visual Spatial Reasoning (VSR), split into *projective* relations (viewpoint-dependent — left of, in front of) and *topological containment* (viewpoint-invariant — inside, contains).
+- **Study 1 — scale:** an exploratory pilot (n = 300) generated the hypothesis that shrinking the model hurts projective reasoning far more than containment. Hypotheses and the analysis plan were then frozen in version control before a confirmatory run at n = 2,000.
+- **Study 2 — edge deployment:** a second pre-registered study compared byte-identical model weights on an NVIDIA Jetson Orin Nano 8GB against a desktop baseline, using two one-sided tests (TOST) for equivalence.
+
+## Results
+
+**Model scale hurts viewpoint-dependent reasoning, not containment.** In the confirmatory run, the projective degradation from 7B to 3B replicated decisively (paired McNemar p ≈ 5.2 × 10⁻⁵), while containment showed no detectable degradation (p = 0.53).
+
+**The interaction is reported honestly, not at its best-looking number.** A logistic interaction test treating each observation as independent put the difference between the two relation types short of significance (χ²(1) = 2.67, p = 0.102). A sensitivity analysis that respects the paired, repeated-measures structure (item-clustered GEE) gives p = 0.017 on the full sample — but that sample includes the 300 pilot items that generated the hypothesis, whose effect is inflated by the winner's curse. On the 1,700 items never used to form the hypothesis, the interaction stays directionally consistent but short of conventional significance (p ≈ 0.07–0.11, depending on method). The paper reports both analyses rather than the one that best supports the hypothesis.
+
+**On the edge device, accuracy holds; throughput and reliability don't.** Among inputs both systems processed, the Jetson was statistically equivalent to the desktop within a ±3 percentage-point margin (difference +0.80 pp, 90% CI [+0.08, +1.52], p = 2.36 × 10⁻⁷, n = 1,996) — a margin the data also satisfy at ±2 pp, but not at ±1.5 pp. Counting the device's rare hard failures as wrong answers leaves that conclusion essentially unchanged. But the same device ran about **21× slower** in its sustained regime, needed an **8× context reduction** just to load the model, and hard-failed on **0.2%** of inputs.
+
+For this model, benchmark and device, the binding constraint on edge deployment is throughput and reliability — not accuracy.
 
 ## The engineering
 
 Most of the work in this project was building an evaluation harness that could run unattended for days at a time, not the modeling itself.
 
 - **Evaluation harness and monitoring** built specifically for unattended, multi-day data collection — the harness needed to detect and recover from failures without a person watching it.
-- **2,000-item balanced evaluation set**, collected with a paired design so the same items are evaluated across every point on the compute spectrum.
+- **2,000-item balanced evaluation set**, collected with a paired design so the same items are evaluated under every condition.
 - **Hypotheses and analysis plan frozen in version control before data collection began** — a pre-registration discipline applied to an engineering evaluation, not just the usual academic context.
 - **Edge-deployment debugging over SSH on a headless device**, including:
   - Diagnosing kernel out-of-memory kills from system logs alone, with no display attached.
@@ -30,12 +48,7 @@ Most of the work in this project was building an evaluation harness that could r
   - Building a clean resume path so an interrupted run could pick back up without re-collecting completed items.
 - The harness **survived two unplanned power losses without losing collected data** — a direct result of the resume-on-interruption design above.
 
-## Methodology, at a high level
+## Links
 
-The evaluation compares the same family of vision-language model across three deployment points on the compute spectrum — a cloud API, a local GPU workstation, and an 8GB Jetson edge device — on a shared, balanced 2,000-item relational and spatial reasoning set, using a paired collection design so every item is evaluated under the same conditions at each compute tier.
-
-Results will be published with the preprint.
-
-## Repository
-
-The repository is private until the preprint posts.
+- Preprint: [zenodo.org/records/23117197](https://zenodo.org/records/23117197)
+- Code: [github.com/TabeenRaoof/vlm-relational-reasoning](https://github.com/TabeenRaoof/vlm-relational-reasoning)
