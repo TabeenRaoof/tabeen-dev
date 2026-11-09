@@ -63,7 +63,7 @@ const EDUCATION: TimelineEntry[] = [
   {
     org: "San Francisco Bay University",
     role: "MS Computer Science (AI/ML)",
-    dates: "Aug 2025 — Dec 2026",
+    dates: "Aug 2025 — present",
     impact:
       "GPA 3.63. Research in image authenticity (TruPhoto) and VLM evaluation on edge hardware; ProofShape capstone.",
   },
@@ -109,7 +109,7 @@ export default function AboutPage() {
           <p>
             I&apos;m Tabeen Raoof, a Bay Area-based applied AI/ML engineer.
             I&apos;m pursuing an MS in Computer Science at SFBU (concentration
-            in AI/ML), graduating December 2026, with a background spanning
+            in AI/ML), with a background spanning
             computer-vision research, backend services, and three years of
             enterprise delivery before that.
           </p>

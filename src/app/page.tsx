@@ -85,7 +85,7 @@ export default function HomePage() {
           and built the monitoring that caught a live outage nobody had
           noticed. Before that: computer-vision research, and three years
           delivering enterprise software to customers. MS Computer Science
-          (AI/ML) at SFBU, graduating December 2026.
+          (AI/ML) at SFBU.
         </p>
         <div className="flex flex-wrap gap-4">
           <Link
