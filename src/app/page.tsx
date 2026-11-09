@@ -72,7 +72,7 @@ export default function HomePage() {
       {/* ----------------------------------------------------------------- */}
       <section className="py-20 sm:py-24">
         <p className="text-sm text-muted mb-4 tracking-wide">
-          Tabeen Raoof — Bay Area · Available from January 2027
+          Tabeen Raoof — Bay Area
         </p>
         <h1 className="text-4xl sm:text-5xl text-ink mb-6">
           Engineer building{" "}
