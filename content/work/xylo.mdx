@@ -1,36 +1,38 @@
 ---
 title: "Xylo AI Studios"
 subtitle: "Forward Deployed / Backend Engineer Intern"
-description: "Own the ingestion and data-extraction service layer for a communications pipeline serving financial-advisory firms."
+description: "Top contributor to the ingestion and data-extraction layer of a communications platform serving financial-advisory firms."
 date: "2026-06-01"
+dateRange: "Jun 2026 – present"
 order: 1
 tags: ["Internship"]
-stack: ["Python", "FastAPI", "PostgreSQL", "SQLAlchemy", "Alembic", "BigQuery", "Google Cloud Run", "Cloud Scheduler", "Cloud Logging & Monitoring", "REST APIs", "CI/CD"]
+stack: ["Python", "FastAPI", "PostgreSQL", "SQLAlchemy", "Alembic", "Flyway", "Java", "Spring Boot", "Redis", "BigQuery", "Google Cloud Run", "Cloud Scheduler", "Cloud Logging & Monitoring", "REST APIs", "GitHub Actions", "CI/CD"]
 featured: true
 status: "Active"
 ---
 
 ## Overview
 
-Xylo is a platform for financial-advisory firms that ingests their communications — email, calendar, CRM records, and meeting transcripts — into a single searchable pipeline. Part of that pipeline pulls meeting transcripts from Zoom, Microsoft Teams and Google Meet and links them back to the calendar events they belong to, so an advisor can search what was actually said in a meeting six months ago. I own the ingestion and data-extraction service layer.
+Xylo is a platform for financial-advisory firms that ingests their communications — email, calendar, CRM records, and meeting transcripts — into a single searchable pipeline. Part of that pipeline pulls meeting transcripts from Zoom, Microsoft Teams and Google Meet and links them back to the calendar events they belong to, so an advisor can search what was actually said in a meeting six months ago. I'm the top contributor to its ingestion and data-extraction service (83 of 154 commits since June 2026).
 
 ## Telling "quiet" from "broken"
 
-Three customers silently lost transcript capture for weeks before anyone noticed. A folder moved, a setting flipped, and nothing was watching. The existing alerting could only say that transcripts weren't flowing — never which meetings were missing — so every alert turned into a manual call to the customer to work out what had happened.
+Before this, transcript outages were found by chance: one Teams feed was down for 21 days and one Meet feed for 16 before anyone noticed. A folder moved, a setting flipped, and nothing was watching. The existing alerting could only say that transcripts weren't flowing — never which meetings were missing — so every alert turned into a manual call to the customer to work out what had happened.
 
 The underlying difficulty is that transcript capture is event-driven. A quiet week is genuinely normal: advisors take holidays, calendars empty out. An earlier monitoring effort had excluded transcripts entirely for exactly this reason, because it had no way to distinguish a quiet week from a broken integration.
 
-The fix was to stop asking "did anything arrive?" and start asking "did what we expected arrive?" A BigQuery view derives an expected meeting count from calendar events, so a gap becomes concrete — nine of twelve meetings captured, rather than an unquantified silence. A connected-platform gate excludes platforms a customer never actually linked, so meetings on a calendar for an account that was never connected don't register as failures. A classifier then reads the view, applies the gate, and decides per customer and platform whether coverage is healthy, degraded against its own baseline, or stalled outright. It runs as a scheduled Cloud Run job with log-based metrics and alert policies.
+The fix was to stop asking "did anything arrive?" and start asking "did what we expected arrive?" A BigQuery view derives an expected meeting count from calendar events, so a gap becomes a count — "0 of 18 recent meetings captured" was the reading that exposed one outage — rather than an unquantified silence. A connected-platform gate excludes platforms a customer never actually linked, so meetings on a calendar for an account that was never connected don't register as failures. In a 90-day baseline, the gate kept 123 of 318 (39%) apparent missed meetings out of the count, because they were on platforms the customer had never connected. A classifier then reads the view, applies the gate, and decides per customer and platform whether coverage is healthy, degraded against its own baseline, or stalled outright. It runs daily as a Cloud Run job for 4 customers across 10 customer–platform pairs, with log-based metrics and a Cloud Monitoring alert.
 
-While I was building it, the diagnostic found a real outage nobody knew about: one customer's Meet transcripts had stopped landing two weeks earlier and nothing had flagged it. Closing that needed a view correction so a just-arrived transcript wasn't miscounted as stale, plus a classifier change to let that failure mode through the gate without opening the door to false alarms elsewhere.
+The Meet outage was the hard case: the old Drive-based capture job reported "clean" every day for 16 days while capturing nothing. I rebuilt Meet capture on the Google Meet API, and in its first runs the monitor flagged a second customer at 0 of 18 recent meetings. The new capture path restored both customers and recovered 25 lost transcripts. Making the monitor catch this failure mode needed a view correction so a just-arrived transcript wasn't miscounted as stale, plus a classifier change to let it through the gate without opening the door to false alarms elsewhere.
 
-The pipeline is live in dev and verified against real production log output rather than only tests. The alert policy itself stays disabled until we've watched roughly a week of real runs and confirmed the thresholds behave, before it pages anyone.
+It runs on live customer data, and its alert has been armed since 30 September 2026.
 
 ## Also
 
-- Python/FastAPI REST endpoints and reversible PostgreSQL migrations (SQLAlchemy/Alembic), each with unit and integration tests and independent code review.
-- Contributed to a platform re-architecture clarifying how customer accounts, credentials and integration sources relate, reducing ambiguity in how new integrations are onboarded.
-- Every change validated through CI/CD to a green deployment before it ships.
+- Built the typed credential-validation endpoint for 5 provider types (Google including keyless auth, Microsoft 365, Zoom and a CRM), which tells bad credentials, missing permissions and provider outages apart.
+- Wrote 18 backward-compatible database migrations (17 Alembic, 1 Flyway). Five of them restructured ingestion around a workspace layer, so one customer organization can connect several Google Workspace or Microsoft 365 tenants.
+- Hardened the platform's Java/Spring OAuth2 identity service: closed a cross-tenant gap, enforced role checks and encrypted its session store. Moved all 16 machine clients to its new token endpoint with 0 canary failures.
+- Added pull-request integration tests (Postgres, Alembic) that caught 13 pull requests before merge. Code-caused test failures on dev deploys fell from 25 to 0 (four months before vs. after).
 
 ## Working style
 
@@ -38,4 +40,4 @@ Xylo builds software together with AI coding agents under a specification-first 
 
 ## Stack
 
-Python, FastAPI, PostgreSQL, SQLAlchemy, Alembic, BigQuery, Google Cloud Run, Cloud Scheduler, Cloud Logging & Monitoring, REST APIs, CI/CD
+Python, FastAPI, PostgreSQL, SQLAlchemy, Alembic, Flyway, Java, Spring Boot, Redis, BigQuery, Google Cloud Run, Cloud Scheduler, Cloud Logging & Monitoring, REST APIs, GitHub Actions, CI/CD

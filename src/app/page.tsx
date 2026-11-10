@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getFeaturedItem, getAllContent, formatDate } from "@/lib/content";
 import { ContentCard } from "@/components/ContentCard";
+import { NowLine } from "@/components/NowLine";
 
 // The home page is a server component — content is read at build time
 // from the filesystem, so the page is fully static.
@@ -13,22 +14,25 @@ import { ContentCard } from "@/components/ContentCard";
 //   4. Recent notes — last 3 posts (only shown if any exist)
 
 const DESCRIPTION =
-  "Applied AI/ML engineer in the Bay Area. Production data pipelines and monitoring on GCP, computer-vision research, and enterprise delivery experience.";
+  "Forward deployed engineer in the Bay Area building backend and AI systems for customers: Python services, PostgreSQL and Google Cloud pipelines on live client data, plus applied computer-vision research.";
 
 export const metadata: Metadata = {
-  title: "Tabeen Raoof — Applied AI/ML Engineer",
+  title: "Tabeen Raoof — Forward Deployed Engineer",
   description: DESCRIPTION,
   alternates: {
     canonical: "https://tabeen.dev",
   },
   openGraph: {
-    title: "Tabeen Raoof — Applied AI/ML Engineer",
+    title: "Tabeen Raoof — Forward Deployed Engineer",
     description: DESCRIPTION,
     url: "https://tabeen.dev",
+    images: [{ url: "/api/og?title=Forward+deployed+engineer+building+backend+and+AI+systems+for+customers.", width: 1200, height: 630 }],
   },
   twitter: {
-    title: "Tabeen Raoof — Applied AI/ML Engineer",
+    card: "summary_large_image",
+    title: "Tabeen Raoof — Forward Deployed Engineer",
     description: DESCRIPTION,
+    images: ["/api/og?title=Forward+deployed+engineer+building+backend+and+AI+systems+for+customers."],
   },
 };
 
@@ -38,7 +42,7 @@ const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Tabeen Raoof",
-  jobTitle: "Applied AI/ML Engineer",
+  jobTitle: "Forward Deployed Engineer",
   alumniOf: {
     "@type": "CollegeOrUniversity",
     name: "San Francisco Bay University",
@@ -75,17 +79,20 @@ export default function HomePage() {
           Tabeen Raoof — Bay Area
         </p>
         <h1 className="text-4xl sm:text-5xl text-ink mb-6">
-          Engineer building{" "}
-          <em className="text-accent italic font-serif">applied AI systems</em>{" "}
-          — and making them work in production.
+          Forward deployed engineer building{" "}
+          <em className="text-accent italic font-serif">backend and AI systems</em>{" "}
+          for customers.
         </h1>
         <p className="text-base text-muted leading-relaxed mb-8">
-          At Xylo AI Studios, I own the services that bring financial-advisory
-          firms&apos; email, calendar, CRM and meeting data into one pipeline —
-          and built the monitoring that caught a live outage nobody had
-          noticed. Before that: computer-vision research, and three years
-          delivering enterprise software to customers. MS Computer Science
-          (AI/ML) at SFBU.
+          At Xylo AI Studios I build the ingestion and data-extraction layer of
+          a communications platform for financial-advisory firms: Python
+          services, PostgreSQL migrations and Google Cloud pipelines on live
+          client data. My coverage monitor replaced outages found by chance
+          after two to three weeks with a daily check, and it flagged a live
+          outage in its first runs. Before that, I spent three years as a
+          Technical Account Manager at Yardi, owning about 20 enterprise
+          clients through implementations, integrations and support. MS
+          Computer Science (AI/ML) at SFBU.
         </p>
         <div className="flex flex-wrap gap-4">
           <Link
@@ -133,12 +140,7 @@ export default function HomePage() {
       {/* date so it doesn't quietly go stale.                              */}
       {/* ----------------------------------------------------------------- */}
       <section className="pb-12 border-t border-line pt-8">
-        <p className="text-sm text-muted leading-relaxed">
-          <span className="text-ink font-medium">Now — </span>
-          Backend engineering at Xylo AI Studios, the ProofShape capstone, and
-          the TruPhoto preprint (my VLM edge-deployment study is now published on Zenodo).{" "}
-          <span className="text-xs text-muted">(Last updated Sep 2026)</span>
-        </p>
+        <NowLine />
       </section>
 
       {/* ----------------------------------------------------------------- */}

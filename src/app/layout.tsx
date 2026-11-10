@@ -30,12 +30,12 @@ const jetbrainsMono = JetBrains_Mono({
 // Site-wide metadata. Per-page pages can override individual fields.
 // metadataBase is what Next uses to resolve relative OG image URLs.
 const SITE_DESCRIPTION =
-  "Applied AI/ML engineer in the Bay Area. Production data pipelines and monitoring on GCP, computer-vision research, and enterprise delivery experience.";
+  "Forward deployed engineer in the Bay Area building backend and AI systems for customers: Python services, PostgreSQL and Google Cloud pipelines on live client data, plus applied computer-vision research.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tabeen.dev"),
   title: {
-    default: "Tabeen Raoof — Applied AI/ML Engineer",
+    default: "Tabeen Raoof — Forward Deployed Engineer",
     template: "%s · tabeen.dev",
   },
   description: SITE_DESCRIPTION,
@@ -48,13 +48,15 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://tabeen.dev",
     siteName: "tabeen.dev",
-    title: "Tabeen Raoof — Applied AI/ML Engineer",
+    title: "Tabeen Raoof — Forward Deployed Engineer",
     description: SITE_DESCRIPTION,
+    images: [{ url: "/api/og?title=Forward+deployed+engineer+building+backend+and+AI+systems+for+customers.", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tabeen Raoof — Applied AI/ML Engineer",
+    title: "Tabeen Raoof — Forward Deployed Engineer",
     description: SITE_DESCRIPTION,
+    images: ["/api/og?title=Forward+deployed+engineer+building+backend+and+AI+systems+for+customers."],
   },
 };
 

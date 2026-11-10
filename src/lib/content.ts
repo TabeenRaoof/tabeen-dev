@@ -36,6 +36,9 @@ export interface ContentMeta {
   description: string;
   /** ISO date string (YYYY-MM-DD) — used for sorting and display */
   date: string;
+  /** Optional display override for the date, e.g. "Jun 2026 – present".
+   *  `date` still drives sorting. */
+  dateRange?: string;
   /** Free-form tags shown as pills on project cards */
   tags?: string[];
   /** Tech stack used (Python, TypeScript, etc.) — shown on detail pages */
@@ -186,4 +189,9 @@ export function formatDate(dateString: string): string {
     year: "numeric",
     timeZone: "UTC",
   });
+}
+
+/** The date as shown on cards and pages: `dateRange` if set, else month + year. */
+export function displayDate(meta: Pick<ContentMeta, "date" | "dateRange">): string {
+  return meta.dateRange ?? formatDate(meta.date);
 }

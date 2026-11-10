@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge } from "./Badge";
-import { formatDate } from "@/lib/content";
+import { displayDate } from "@/lib/content";
 import type { ContentItem } from "@/lib/content";
 
 // Shared card for the Work and Research index grids.
@@ -35,7 +35,7 @@ export function ContentCard({ href, item }: ContentCardProps) {
     meta.subtitle,
     meta.status,
     meta.description,
-    formatDate(meta.date),
+    displayDate(meta),
   ]
     .filter(Boolean)
     .map((part) => part!.replace(/\.$/, ""))
@@ -67,7 +67,7 @@ export function ContentCard({ href, item }: ContentCardProps) {
       </p>
 
       <p className="text-2xs text-muted opacity-70" aria-hidden="true">
-        {formatDate(meta.date)}
+        {displayDate(meta)}
       </p>
     </Link>
   );

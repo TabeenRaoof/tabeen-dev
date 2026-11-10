@@ -1,10 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { NowLine } from "@/components/NowLine";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Applied AI/ML engineer in the Bay Area — background, experience, and how to get in touch.",
+    "Forward deployed engineer in the Bay Area — background, experience, and how to get in touch.",
   alternates: { canonical: "https://tabeen.dev/about" },
 };
 
@@ -27,7 +28,7 @@ const EXPERIENCE: TimelineEntry[] = [
     role: "Forward Deployed / Backend Engineer Intern",
     dates: "Jun 2026 — present",
     impact:
-      "Own the ingestion and data-extraction services for a communications platform serving financial-advisory firms; built the coverage monitoring that surfaced a live production outage.",
+      "Top contributor to the ingestion and data-extraction services for a communications platform serving financial-advisory firms; built the transcript-coverage monitor and helped harden the platform's identity service.",
   },
   {
     org: "FiPet",
@@ -44,18 +45,11 @@ const EXPERIENCE: TimelineEntry[] = [
       "Owned end-to-end delivery for roughly 20 enterprise real estate clients — discovery, solution design, configuration, data conversion and go-live.",
   },
   {
-    org: "Aviso Wealth",
-    role: "New Account Administrator",
-    dates: "Dec 2020 — Jul 2022",
+    org: "LimeWare",
+    role: "Data Analyst",
+    dates: "Jul 2020 — Jul 2022",
     impact:
-      "Maintained account indexing pipelines and audited electronic fund transfer pathways in a regulated environment.",
-  },
-  {
-    org: "United Nations (UNHCR & UNDP)",
-    role: "Field Associate / Project Officer",
-    dates: "Jun 2014 — Jan 2019",
-    impact:
-      "Led up to three concurrent humanitarian cash-for-work infrastructure projects for over 3,000 workers; built a cloud-based reporting system that replaced siloed spreadsheets across agency offices.",
+      "Market research and competitive analysis for an Amazon e-commerce brand using Helium 10 and Jungle Scout; resolved catalog and brand-registry issues in Amazon Seller Central.",
   },
 ];
 
@@ -65,7 +59,7 @@ const EDUCATION: TimelineEntry[] = [
     role: "MS Computer Science (AI/ML)",
     dates: "Aug 2025 — present",
     impact:
-      "GPA 3.63. Research in image authenticity (TruPhoto) and VLM evaluation on edge hardware; ProofShape capstone.",
+      "GPA 3.63. Research in VLM evaluation on edge hardware (preprint) and image authenticity (TruPhoto); ProofShape capstone.",
   },
   {
     org: "University Canada West",
@@ -107,21 +101,20 @@ export default function AboutPage() {
 
         <div className="prose">
           <p>
-            I&apos;m Tabeen Raoof, a Bay Area-based applied AI/ML engineer.
-            I&apos;m pursuing an MS in Computer Science at SFBU (concentration
-            in AI/ML), with a background spanning
-            computer-vision research, backend services, and three years of
-            enterprise delivery before that.
+            I&apos;m Tabeen Raoof, a Bay Area forward deployed engineer who
+            builds backend and AI systems for customers. I&apos;m finishing an
+            MS in Computer Science (AI/ML) at SFBU, graduating December 2026.
           </p>
 
           <p>
-            My path to engineering wasn&apos;t straight. I started in
-            international project management at the United Nations, running
-            humanitarian infrastructure programmes, then moved into Technical
-            Account Management at Yardi Systems in PropTech before going back
-            to school. That mix shows up in how I work: I care about technical
+            Before engineering, I spent three years as a Technical Account
+            Manager at Yardi, owning about 20 enterprise clients through
+            implementations, integrations and support. That&apos;s where I
+            learned to turn vague customer problems into clear specs and
+            working fixes, and it shapes how I work: I care about technical
             depth, but I also think hard about who the user is and what
-            problem the system actually solves.
+            problem the system actually solves. Next, I want to build AI
+            products in a forward deployed engineering role.
           </p>
 
           <p>
@@ -142,13 +135,7 @@ export default function AboutPage() {
       </section>
 
       <section className="pb-12 border-t border-line pt-10">
-        <p className="text-sm text-muted leading-relaxed">
-          <span className="text-ink font-medium">Now — </span>
-          Backend engineering at Xylo AI Studios, the ProofShape capstone, and
-          the TruPhoto preprint (my VLM edge-deployment study is now published on Zenodo).
-          Available from the first week of January 2027.{" "}
-          <span className="text-xs text-muted">(Last updated Sep 2026)</span>
-        </p>
+        <NowLine />
       </section>
 
       <section className="pb-16 border-t border-line pt-10">

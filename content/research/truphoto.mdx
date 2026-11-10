@@ -1,8 +1,10 @@
 ---
-title: "TruPhoto — Three-Class Image Authenticity Classification"
-subtitle: "Tabeen Raoof and Joao Cozza · CS483, San Francisco Bay University, 2026 · supervised by Prof. Emdad Khan"
+title: "TruPhoto — Combining Semantic and Frequency-Domain Features for Three-Class Image Authenticity Classification"
+subtitle: "Tabeen Raoof and Joao Pedro Cozza · CS483, San Francisco Bay University, 2026 · supervised by Prof. Emdad Khan"
 description: "Three-class image authenticity classifier (Real / Forged / AI-Generated) combining a frozen MobileNetV2 backbone with frequency-domain features, classified by an RBF-kernel SVM."
 date: "2026-04-15"
+dateRange: "Jan 2026 – May 2026"
+order: 2
 tags: ["Computer vision"]
 stack: ["Python", "PyTorch", "timm", "MobileNetV2", "scikit-learn", "scipy", "numpy", "Pillow", "Gradio"]
 github: "https://github.com/TabeenRaoof/xception-photo-verification"
@@ -14,8 +16,8 @@ diagram:
   alt: "Flowchart of the TruPhoto experiment pipeline. Images are resized and split into train, validation and test sets, then three frozen feature paths run in parallel: CNN features (Xception or MobileNetV2), frequency features (FFT radial bins and DCT statistics), and a CLIP ViT-L/14 baseline. Random-forest and SVM classifiers are trained on each path alone and on CNN plus frequency and CLIP plus frequency combinations, and all are compared in test evaluation. The CNN plus frequency path is highlighted as the final system."
   caption: "Highlighted in orange: the final system — MobileNetV2 and frequency features, concatenated and classified by an SVM."
 research:
-  summary: "Preprint in preparation — arXiv link coming soon."
-status: "Active"
+  summary: "Preprint in preparation."
+status: "Paper written · preprint in progress"
 ---
 
 ## Overview
@@ -70,4 +72,4 @@ Python, PyTorch, timm, MobileNetV2, scikit-learn, scipy, numpy, Pillow, Gradio
 ## Links
 
 - GitHub: [github.com/TabeenRaoof/xception-photo-verification](https://github.com/TabeenRaoof/xception-photo-verification)
-- Preprint: in preparation — arXiv link coming soon
+- Preprint in preparation.

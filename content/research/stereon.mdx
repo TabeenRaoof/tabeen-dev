@@ -2,13 +2,14 @@
 title: "Stereon — Capture-Time Geometric Verification"
 description: "A research direction into verifying image authenticity through physical-scene geometric consistency rather than learned appearance artifacts."
 date: "2026-07-01"
+order: 3
 tags: ["Computer vision"]
-status: "Research direction"
+status: "Paused"
 ---
 
 ## Overview
 
-Stereon is a research direction I'm pursuing, picking up where [TruPhoto](/research/truphoto) left off. TruPhoto established a ceiling: appearance-based detectors learn generator-specific artifacts, so they degrade against architectures designed to erase those artifacts. StyleGAN3 at 37% accuracy is the honest limit of that approach.
+Stereon is a research direction I started after [TruPhoto](/research/truphoto) and have paused while I focus on my work at Xylo and my degree. TruPhoto established a ceiling: appearance-based detectors learn generator-specific artifacts, so they degrade against architectures designed to erase those artifacts. StyleGAN3 at 37% accuracy is the honest limit of that approach.
 
 Stereon asks a different question. Instead of inspecting an image for traces of how it was made, it tests whether a set of images is geometrically consistent with a real physical scene. Multiple views of a real object triangulate to one coherent 3D structure; a photograph of a screen reconstructs as a plane; a set of generated views fails to agree on any single structure at all. The signal is physics rather than learned artifacts, so it generalizes by construction — it does not care which model produced the image.
 
