@@ -6,7 +6,7 @@ import rehypeSlug from "rehype-slug";
 import {
   getAllContent,
   getContentBySlug,
-  formatDate,
+  displayDate,
 } from "@/lib/content";
 import { Badge } from "@/components/Badge";
 import { DemoFrame } from "@/components/DemoFrame";
@@ -93,7 +93,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
           <p className="text-sm text-muted mb-3">{meta.subtitle}</p>
         )}
         <p className="text-base text-muted leading-relaxed mb-5">{meta.description}</p>
-        <p className="text-xs text-muted mb-5">{formatDate(meta.date)}</p>
+        <p className="text-xs text-muted mb-5">{displayDate(meta)}</p>
 
         <div className="flex flex-wrap gap-3 text-xs">
           {meta.github && (

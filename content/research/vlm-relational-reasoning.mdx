@@ -1,7 +1,9 @@
 ---
-title: "VLM Relational Reasoning Across a Compute Spectrum"
-description: "A pre-registered study of which spatial reasoning survives smaller vision-language models and edge deployment — Qwen2.5-VL 3B/7B and Gemini-2.5-Flash, down to an 8GB NVIDIA Jetson."
+title: "Compute Scale, Relation Type, and Edge Deployment in Vision–Language Spatial Reasoning"
+subtitle: "Individual research project · M.S. Computer Science, San Francisco Bay University, 2026 · supervised by Prof. Satarupa Mukherjee"
+description: "A pre-registered study of which spatial reasoning survives smaller vision-language models and edge deployment — Qwen2.5-VL 3B/7B and Gemini-2.5-Flash, down to an 8GB NVIDIA Jetson. On the edge device, accuracy held; speed and reliability didn't."
 date: "2026-06-01"
+order: 1
 tags: ["Vision-language models"]
 stack: ["Python", "PyTorch", "Jetson", "Ollama", "Gemini API"]
 github: "https://github.com/TabeenRaoof/vlm-relational-reasoning"
@@ -33,6 +35,13 @@ Vision-language models are increasingly deployed at smaller parameter scales and
 **On the edge device, accuracy holds; throughput and reliability don't.** Among inputs both systems processed, the Jetson was statistically equivalent to the desktop within a ±3 percentage-point margin (difference +0.80 pp, 90% CI [+0.08, +1.52], p = 2.36 × 10⁻⁷, n = 1,996) — a margin the data also satisfy at ±2 pp, but not at ±1.5 pp. Counting the device's rare hard failures as wrong answers leaves that conclusion essentially unchanged. But the same device ran about **21× slower** in its sustained regime, needed an **8× context reduction** just to load the model, and hard-failed on **0.2%** of inputs.
 
 For this model, benchmark and device, the binding constraint on edge deployment is throughput and reliability — not accuracy.
+
+## In practice
+
+For this model on this device:
+
+- **Works:** a stockroom camera that checks every few minutes whether an item is inside its bin. The Jetson sustained about 62 answers an hour, and "inside" questions were its most accurate type (83.8%).
+- **Doesn't work:** a warehouse robot deciding in real time whether an obstacle is on its left. This model took about 58 seconds per answer on the 8GB Jetson, and "left of" questions were its least accurate type (77.3%).
 
 ## The engineering
 
